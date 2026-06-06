@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProBudget - Complete Budgeting System</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1a2847 100%);
+            color: #f1f5f9;
+            padding: 16px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+        
+        .header p {
+            color: #94a3b8;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+        }
+        
+        .tab-btn {
+            background: rgba(30, 41, 59, 0.6);
+            color: #94a3b8;
+            border: 1px solid rgba(51, 65, 85, 0.5);
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .tab-btn:hover {
+            border-color: #3b82f6;
+            color: #3b82f6;
+        }
+        
+        .tab-btn.active {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            border-color: #3b82f6;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(51, 65, 85, 0.5);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: #e2e8f0;
+        }
+        
+        .card h4 {
+            font-size: 1.05rem;
+            margin-top: 20px;
+            margin-bottom: 12px;
+            color: #cbd5e1;
+        }
+        
+        .card h4:first-of-type {
+            margin-top: 0;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-box {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+        }
+        
+        .stat-label {
+            color: #94a3b8;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #3b82f6;
+        }
+        
+        .input-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .input-row {
+            display: flex;
+            gap: 10px;
+        }
+        
+        input, select, textarea {
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(71, 85, 105, 0.5);
+            background: rgba(15, 23, 42, 0.6);
+            color: white;
+            font-size: 0.95rem;
+            font-family: inherit;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background: rgba(15, 23, 42, 0.9);
+        }
+        
+        input {
+            flex: 1;
+        }
+        
+        select {
+            min-width: 150px;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
+        
+        button {
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            flex: 1;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+        
+        .btn-secondary {
+            background: rgba(71, 85, 105, 0.5);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(71, 85, 105, 0.7);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            padding: 8px 12px;
+            font-size: 0.85rem;
+        }
+        
+        .btn-danger:hover {
+            transform: scale(1.05);
+        }
+        
+        .item-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .item {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.5) 0%, rgba(15, 23, 42, 0.5) 100%);
+            padding: 16px;
+            border-radius: 8px;
+            border-left: 4px solid #3b82f6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .item-info {
+            flex: 1;
+        }
+        
+        .item-name {
+            font-weight: 600;
+            color: #e2e8f0;
+            margin-bottom: 4px;
+        }
+        
+        .item-detail {
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+        
+        .item-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #3b82f6;
+            margin-right: 12px;
+        }
+        
+        .budget-bar {
+            margin: 16px 0;
+        }
+        
+        .budget-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .budget-header .label {
+            font-weight: 600;
+            color: #e2e8f0;
+        }
+        
+        .budget-header .amount {
+            color: #94a3b8;
+        }
+        
+        .budget-background {
+            width: 100%;
+            height: 24px;
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(51, 65, 85, 0.3);
+        }
+        
+        .budget-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%);
+            border-radius: 12px;
+            transition: width 0.3s ease;
+        }
+        
+        .budget-fill.warning {
+            background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);
+        }
+        
+        .budget-fill.danger {
+            background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%);
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 20px 0;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        
+        .summary-item {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(59, 130, 246, 0.1);
+        }
+        
+        .summary-item-label {
+            color: #94a3b8;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+        }
+        
+        .summary-item-value {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #3b82f6;
+        }
+        
+        .empty-message {
+            text-align: center;
+            color: #64748b;
+            padding: 40px 20px;
+        }
+        
+        .progress-badge {
+            display: inline-block;
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        
+        .progress-badge.achieved {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 32px 0;
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-top: 40px;
+            border-top: 1px solid rgba(51, 65, 85, 0.3);
+        }
+        
+        .footer .signature {
+            font-weight: 600;
+            color: #94a3b8;
+            margin-top: 8px;
+            font-style: italic;
+        }
+
+        @media (max-width: 640px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .input-row {
+                flex-direction: column;
+            }
+            
+            select {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💰 ProBudget</h1>
+            <p>Your complete budgeting system - by Joni King</p>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('dashboard')">📊 Dashboard</button>
+            <button class="tab-btn" onclick="switchTab('income')">💵 Income</button>
+            <button class="tab-btn" onclick="switchTab('budgets')">📍 Budget Limits</button>
+            <button class="tab-btn" onclick="switchTab('goals')">🎯 Savings Goals</button>
+            <button class="tab-btn" onclick="switchTab('recurring')">🔄 Recurring</button>
+            <button class="tab-btn" onclick="switchTab('reports')">📈 Reports</button>
+            <button class="tab-btn" onclick="switchTab('settings')">⚙️ Settings</button>
+        </div>
+        
+        <div id="dashboard" class="tab-content active">
+            <div class="card" style="border: 1px solid rgba(139, 92, 246, 0.4); background: linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.95) 100%);">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 1.6rem;">🤖</span>
+                        <h3 style="margin-bottom: 0; color: #a78bfa; font-size: 1.4rem;">FIN AI Advisor</h3>
+                    </div>
+                    <div id="finSpendingPaceBadge"></div>
+                </div>
+                
+                <div id="finCoachingEngineText" style="font-size: 1.05rem; line-height: 1.6; color: #e2e8f0; margin-bottom: 24px; padding: 16px; background: rgba(15, 23, 42, 0.5); border-radius: 12px; border-left: 4px solid #8b5cf6;">
+                    Analyzing metrics...
+                </div>
+                
+                <h4 style="color: #cbd5e1; margin-bottom: 12px; font-weight: 600;">📊 Budget Health Report</h4>
+                <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 16px;">
+                    <div class="stat-box" style="background: rgba(15, 23, 42, 0.3); border-color: rgba(255, 255, 255, 0.05); padding: 12px;">
+                        <div class="stat-label" style="font-size: 0.75rem;">Fixed Obligations Paid</div>
+                        <div class="stat-value" id="finFixedPaid" style="font-size: 1.3rem; color: #cbd5e1;">₱0</div>
+                    </div>
+                    <div class="stat-box" style="background: rgba(15, 23, 42, 0.3); border-color: rgba(255, 255, 255, 0.05); padding: 12px;">
+                        <div class="stat-label" style="font-size: 0.75rem;">Flexible Spending</div>
+                        <div class="stat-value" id="finFlexibleSpent" style="font-size: 1.3rem; color: #cbd5e1;">₱0</div>
+                    </div>
+                    <div class="stat-box" style="background: rgba(15, 23, 42, 0.3); border-color: rgba(255, 255, 255, 0.05); padding: 12px;">
+                        <div class="stat-label" style="font-size: 0.75rem;">Protected (Bills & Goals)</div>
+                        <div class="stat-value" id="finProtectedFunds" style="font-size: 1.3rem; color: #8b5cf6;">₱0</div>
+                    </div>
+                    <div class="stat-box" style="background: rgba(15, 23, 42, 0.3); border-color: rgba(255, 255, 255, 0.05); padding: 12px;">
+                        <div class="stat-label" style="font-size: 0.75rem;">Remaining Safe Spending</div>
+                        <div class="stat-value" id="finRemainingSafe" style="font-size: 1.3rem; color: #10b981;">₱0</div>
+                    </div>
+                </div>
+                
+                <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 12px; padding: 14px; text-align: center;" id="finSafeToSpendContainer">
+                    <span style="color: #94a3b8; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; margin-right: 6px;">Daily Safe-To-Spend:</span>
+                    <strong id="finDailySafeToSpend" style="color: #10b981; font-size: 1.3rem; font-weight: 700;">₱0/day</strong>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📊 Financial Overview</h3>
+                <div class="grid">
+                    <div class="stat-box">
+                        <div class="stat-label">Total Available Funds</div>
+                        <div class="stat-value" id="dashTotalIncome">₱0</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Total Expenses This Month</div>
+                        <div class="stat-value" id="dashTotalExpenses">₱0</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Financial Cushion</div>
+                        <div class="stat-value" id="dashNetBalance">₱0</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Savings Goals</div>
+                        <div class="stat-value" id="dashGoalsProgress">0%</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>💹 Spending by Category</h3>
+                <div class="chart-container">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>📈 Monthly Trend</h3>
+                <div class="chart-container">
+                    <canvas id="trendChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <div id="income" class="tab-content">
+            <div class="card">
+                <h3>💰 Cash Reserve (Month Rollover)</h3>
+                <p style="color: #94a3b8; margin-bottom: 16px; font-size: 0.9rem;">
+                    Specify funds accumulated from previous months to ensure calculations dynamically adjust during month rollover periods.
+                </p>
+                <div class="input-section">
+                    <div class="input-row">
+                        <input type="number" id="carryOverBalance" placeholder="Available Cash Reserve (e.g. 33540)" oninput="updateCarryOverData()" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>💵 Income Sources</h3>
+                
+                <div class="input-section">
+                    <div class="input-row">
+                        <input type="text" id="incomeSourceName" placeholder="Income source (e.g., Salary, Freelance)" />
+                        <input type="number" id="incomeSourceAmount" placeholder="Amount (₱)" />
+                        <select id="incomeSourceType">
+                            <option value="monthly">Monthly</option>
+                            <option value="one-time">One-time</option>
+                        </select>
+                    </div>
+                    <button class="btn-primary" onclick="addIncomeSource()">Add Income Source</button>
+                </div>
+                
+                <h4>Active Income Sources</h4>
+                <div class="item-list" id="incomeSourcesList">
+                    <div class="empty-message">No income sources yet.</div>
+                </div>
+                
+                <h4 style="margin-top: 24px;">Monthly Income Summary</h4>
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <div class="summary-item-label">Fixed Monthly Income</div>
+                        <div class="summary-item-value" id="fixedIncome">₱0</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-item-label">Variable Income</div>
+                        <div class="summary-item-value" id="variableIncome">₱0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="budgets" class="tab-content">
+            <div class="card">
+                <h3>📍 Set Category Budgets</h3>
+                
+                <div class="input-section">
+                    <div class="input-row">
+                        <select id="budgetCategory"></select>
+                        <input type="number" id="budgetAmount" placeholder="Monthly limit (₱)" />
+                    </div>
+                    <button class="btn-primary" onclick="setBudgetLimit()">Set Budget Limit</button>
+                </div>
+                
+                <h4>Your Budget Limits</h4>
+                <div id="budgetsList"></div>
+                
+                <h4 style="margin-top: 24px;">Budget Status</h4>
+                <div id="budgetStatus"></div>
+            </div>
+        </div>
+        
+        <div id="goals" class="tab-content">
+            <div class="card">
+                <h3>🎯 Savings Goals</h3>
+                
+                <div class="input-section">
+                    <input type="text" id="goalName" placeholder="Goal name (e.g., Vacation, Car)" />
+                    <div class="input-row">
+                        <input type="number" id="goalTarget" placeholder="Target amount (₱)" />
+                        <input type="number" id="goalCurrent" placeholder="Current savings (₱)" />
+                    </div>
+                    <input type="date" id="goalDeadline" />
+                    <button class="btn-primary" onclick="addGoal()">Create Goal</button>
+                </div>
+                
+                <h4>Your Savings Goals</h4>
+                <div id="goalsList"></div>
+            </div>
+        </div>
+        
+        <div id="recurring" class="tab-content">
+            <div class="card">
+                <h3>🔄 Recurring Expenses</h3>
+                
+                <div class="input-section">
+                    <input type="text" id="recurringName" placeholder="Expense name (e.g., Netflix subscription)" />
+                    <div class="input-row">
+                        <input type="number" id="recurringAmount" placeholder="Amount (₱)" />
+                        <select id="recurringFrequency">
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly">Monthly</option>
+                            <option value="quarterly">Quarterly</option>
+                            <option value="yearly">Yearly</option>
+                        </select>
+                    </div>
+                    <select id="recurringCategory"></select>
+                    <button class="btn-primary" onclick="addRecurring()">Add Recurring Expense</button>
+                </div>
+                
+                <h4>Active Recurring Expenses</h4>
+                <div class="item-list" id="recurringList">
+                    <div class="empty-message">No recurring expenses yet.</div>
+                </div>
+                
+                <h4 style="margin-top: 24px;">Monthly Recurring Total</h4>
+                <div class="stat-box">
+                    <div class="stat-label">Estimated Monthly Commitment</div>
+                    <div class="stat-value" id="recurringTotal">₱0</div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="reports" class="tab-content">
+            <div class="card">
+                <h3>📈 Financial Reports</h3>
+                
+                <h4>Category Analysis</h4>
+                <div id="categoryAnalysis"></div>
+                
+                <h4 style="margin-top: 24px;">Budget vs Actual Spending</h4>
+                <div id="budgetComparison"></div>
+                
+                <h4 style="margin-top: 24px;">Total Portfolio vs Expenses</h4>
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <div class="summary-item-label">Available Funds (Reserve + Income)</div>
+                        <div class="summary-item-value" id="reportIncome">₱0</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-item-label">Total Monthly Expenses</div>
+                        <div class="summary-item-value" id="reportExpenses">₱0</div>
+                    </div>
+                </div>
+                
+                <h4 style="margin-top: 24px;">Financial Cushion Retention Rate</h4>
+                <div class="chart-container">
+                    <canvas id="savingsRateChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div id="settings" class="tab-content">
+            <div class="card">
+                <h3>🛠️ Dynamic Category Control</h3>
+                <p style="color: #94a3b8; margin-bottom: 16px; font-size: 0.9rem;">
+                    Add custom category definitions below. They will immediately become available across all configuration screens.
+                </p>
+                <div class="input-section">
+                    <div class="input-row">
+                        <input type="text" id="customCategoryInput" placeholder="Category Name (e.g., Motorcycle Maintenance)" />
+                        <button class="btn-primary" onclick="createCustomCategory()">Create Category</button>
+                    </div>
+                </div>
+                <div id="customCategoriesManagerList" style="margin-top: 16px;"></div>
+            </div>
+
+            <div class="card">
+                <h3>⚙️ FIN AI Classification Settings</h3>
+                <p style="color: #94a3b8; margin-bottom: 16px; font-size: 0.9rem;">
+                    Configure classification mappings dynamically. Fixed Obligations capture critical non-discretionary payments. Flexible Spending profiles discretionary choices.
+                </p>
+                <div id="renderCategorySettingsWrapper"></div>
+            </div>
+
+            <div class="card" style="border: 1px solid rgba(239, 68, 68, 0.4);">
+                <h3 style="color: #f87171;">⚠️ Reset System Settings</h3>
+                <p style="color: #94a3b8; margin-bottom: 16px; font-size: 0.9rem;">
+                    Purge all current configuration data, local caches, transactional definitions, and reset the environment to state defaults.
+                </p>
+                <button class="btn-danger" style="width: 100%; padding: 14px; font-size: 1rem;" onclick="resetAllData()">Reset Application Data</button>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>ProBudget - Complete Financial Control</p>
+            <div class="signature">Created by Joni King</div>
+        </div>
+    </div>
+    
+    <script>
+        // Data Structure
+        let budgetData = {
+            incomeSources: [],
+            budgetLimits: {},
+            savingsGoals: [],
+            recurringExpenses: [],
+            transactions: [],
+            carryOverBalance: 0,
+            categories: [
+                'Housing/Bills', 'Food/Groceries', 'Transport', 
+                'Entertainment', 'Utilities', 'Health', 'Education', 'Other'
+            ],
+            fixedCategories: [ 'Housing/Bills', 'Utilities', 'Health', 'Education' ]
+        };
+        
+        let charts = {};
+        const currentDate = new Date();
+        
+        // Load Data
+        function loadData() {
+            const saved = localStorage.getItem('probudget_data');
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                // Schema patches for forward-compatibility
+                if (!parsed.categories) parsed.categories = [...budgetData.categories];
+                if (!parsed.fixedCategories) parsed.fixedCategories = [...budgetData.fixedCategories];
+                if (parsed.carryOverBalance === undefined) parsed.carryOverBalance = 0;
+                budgetData = parsed;
+            }
+            
+            // Set input field state
+            const carryOverInput = document.getElementById('carryOverBalance');
+            if (carryOverInput) {
+                carryOverInput.value = budgetData.carryOverBalance || '';
+            }
+
+            dynamicSyncDropdowns();
+            updateAllUI();
+        }
+        
+        // Save Data
+        function saveData() {
+            localStorage.setItem('probudget_data', JSON.stringify(budgetData));
+            updateAllUI();
+        }
+
+        // Handle Reserve Cash Changes Directly
+        function updateCarryOverData() {
+            const val = parseFloat(document.getElementById('carryOverBalance').value);
+            budgetData.carryOverBalance = isNaN(val) ? 0 : val;
+            localStorage.setItem('probudget_data', JSON.stringify(budgetData));
+            
+            // Inline recalculations across global boundaries
+            updateDashboard();
+            updateReportsSummary();
+            updateFINAdvisor();
+            if (document.getElementById('reports').classList.contains('active')) {
+                renderSavingsRateChart();
+            }
+        }
+
+        // Manage Dropdown Dynamic Content Updates
+        function dynamicSyncDropdowns() {
+            const budgetSelect = document.getElementById('budgetCategory');
+            const recurringSelect = document.getElementById('recurringCategory');
+            
+            if (budgetSelect && recurringSelect) {
+                const optionsHtml = budgetData.categories.map(cat => {
+                    let prefix = '📌 ';
+                    if (cat.includes('Housing')) prefix = '🏠 ';
+                    if (cat.includes('Food')) prefix = '🍔 ';
+                    if (cat.includes('Transport')) prefix = '🚗 ';
+                    if (cat.includes('Entertainment')) prefix = '🎬 ';
+                    if (cat.includes('Utilities')) prefix = '⚡ ';
+                    if (cat.includes('Health')) prefix = '🏥 ';
+                    if (cat.includes('Education')) prefix = '📚 ';
+                    return `<option value="${cat}">${prefix}${cat}</option>`;
+                }).join('');
+
+                budgetSelect.innerHTML = optionsHtml;
+                recurringSelect.innerHTML = optionsHtml;
+            }
+        }
+        
+        // Switch Tabs
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+            
+            // Render charts when tab is visible
+            setTimeout(() => {
+                if (tabName === 'dashboard') {
+                    renderCategoryChart();
+                    renderTrendChart();
+                } else if (tabName === 'reports') {
+                    renderSavingsRateChart();
+                }
+            }, 100);
+        }
+        
+        // ===== INCOME SOURCES =====
+        function addIncomeSource() {
+            const name = document.getElementById('incomeSourceName').value;
+            const amount = parseFloat(document.getElementById('incomeSourceAmount').value);
+            const type = document.getElementById('incomeSourceType').value;
+            
+            if (!name || !amount || amount <= 0) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            budgetData.incomeSources.push({
+                id: Date.now(),
+                name,
+                amount,
+                type
+            });
+            
+            document.getElementById('incomeSourceName').value = '';
+            document.getElementById('incomeSourceAmount').value = '';
+            saveData();
+        }
+        
+        function deleteIncomeSource(id) {
+            budgetData.incomeSources = budgetData.incomeSources.filter(i => i.id !== id);
+            saveData();
+        }
+        
+        // ===== BUDGET LIMITS =====
+        function setBudgetLimit() {
+            const category = document.getElementById('budgetCategory').value;
+            const amount = parseFloat(document.getElementById('budgetAmount').value);
+            
+            if (!amount || amount <= 0) {
+                alert('Please enter a valid amount');
+                return;
+            }
+            
+            budgetData.budgetLimits[category] = amount;
+            document.getElementById('budgetAmount').value = '';
+            saveData();
+        }
+        
+        function deleteBudgetLimit(category) {
+            delete budgetData.budgetLimits[category];
+            saveData();
+        }
+        
+        // ===== SAVINGS GOALS =====
+        function addGoal() {
+            const name = document.getElementById('goalName').value;
+            const target = parseFloat(document.getElementById('goalTarget').value);
+            const current = parseFloat(document.getElementById('goalCurrent').value) || 0;
+            const deadline = document.getElementById('goalDeadline').value;
+            
+            if (!name || !target || target <= 0) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            budgetData.savingsGoals.push({
+                id: Date.now(),
+                name,
+                target,
+                current,
+                deadline
+            });
+            
+            document.getElementById('goalName').value = '';
+            document.getElementById('goalTarget').value = '';
+            document.getElementById('goalCurrent').value = '';
+            document.getElementById('goalDeadline').value = '';
+            saveData();
+        }
+        
+        function deleteGoal(id) {
+            budgetData.savingsGoals = budgetData.savingsGoals.filter(g => g.id !== id);
+            saveData();
+        }
+        
+        function updateGoalProgress(id, amount) {
+            const goal = budgetData.savingsGoals.find(g => g.id === id);
+            if (goal) {
+                goal.current = parseFloat(amount) || 0;
+                saveData();
+            }
+        }
+        
+        // ===== RECURRING EXPENSES =====
+        function addRecurring() {
+            const name = document.getElementById('recurringName').value;
+            const amount = parseFloat(document.getElementById('recurringAmount').value);
+            const frequency = document.getElementById('recurringFrequency').value;
+            const category = document.getElementById('recurringCategory').value;
+            
+            if (!name || !amount || amount <= 0) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            budgetData.recurringExpenses.push({
+                id: Date.now(),
+                name,
+                amount,
+                frequency,
+                category
+            });
+            
+            document.getElementById('recurringName').value = '';
+            document.getElementById('recurringAmount').value = '';
+            saveData();
+        }
+        
+        function deleteRecurring(id) {
+            budgetData.recurringExpenses = budgetData.recurringExpenses.filter(r => r.id !== id);
+            saveData();
+        }
+        
+        // ===== CALCULATIONS =====
+        function getTotalIncome() {
+            return budgetData.incomeSources
+                .filter(i => i.type === 'monthly')
+                .reduce((sum, i) => sum + i.amount, 0);
+        }
+        
+        function getTotalExpenses() {
+            return budgetData.transactions
+                .filter(t => {
+                    const d = new Date(t.date);
+                    return d.getMonth() === currentDate.getMonth() && 
+                           d.getFullYear() === currentDate.getFullYear();
+                })
+                .reduce((sum, t) => sum + t.amount, 0);
+        }
+        
+        function getRecurringMonthly() {
+            return budgetData.recurringExpenses.reduce((sum, r) => {
+                let multiplier = 1;
+                if (r.frequency === 'weekly') multiplier = 4.33;
+                if (r.frequency === 'quarterly') multiplier = 0.25;
+                if (r.frequency === 'yearly') multiplier = 1/12;
+                return sum + (r.amount * multiplier);
+            }, 0);
+        }
+        
+        function getExpensesByCategory() {
+            const categories = {};
+            budgetData.transactions
+                .filter(t => {
+                    const d = new Date(t.date);
+                    return d.getMonth() === currentDate.getMonth() && 
+                           d.getFullYear() === currentDate.getFullYear();
+                })
+                .forEach(t => {
+                    categories[t.category] = (categories[t.category] || 0) + t.amount;
+                });
+            return categories;
+        }
+
+        // Refactored Budget Intelligence Classifications
+        function isFixedExpense(category) {
+            if (!budgetData.fixedCategories) {
+                budgetData.fixedCategories = ['Housing/Bills', 'Utilities', 'Health', 'Education'];
+            }
+            return budgetData.fixedCategories.includes(category);
+        }
+        
+        // ===== UI UPDATES =====
+        function updateIncomeSourcesList() {
+            const list = document.getElementById('incomeSourcesList');
+            if (budgetData.incomeSources.length === 0) {
+                list.innerHTML = '<div class="empty-message">No income sources yet.</div>';
+                return;
+            }
+            
+            list.innerHTML = budgetData.incomeSources.map(income => `
+                <div class="item">
+                    <div class="item-info">
+                        <div class="item-name">${income.name}</div>
+                        <div class="item-detail">${income.type.charAt(0).toUpperCase() + income.type.slice(1)}</div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div class="item-value">₱${income.amount.toLocaleString()}</div>
+                        <button class="btn-danger" onclick="deleteIncomeSource(${income.id})">✕</button>
+                    </div>
+                </div>
+            `).join('');
+            
+            const fixed = budgetData.incomeSources
+                .filter(i => i.type === 'monthly')
+                .reduce((sum, i) => sum + i.amount, 0);
+            const variable = budgetData.incomeSources
+                .filter(i => i.type === 'one-time')
+                .reduce((sum, i) => sum + i.amount, 0);
+            
+            document.getElementById('fixedIncome').textContent = '₱' + fixed.toLocaleString();
+            document.getElementById('variableIncome').textContent = '₱' + variable.toLocaleString();
+        }
+        
+        function updateBudgetsList() {
+            const list = document.getElementById('budgetsList');
+            const categories = Object.keys(budgetData.budgetLimits);
+            
+            if (categories.length === 0) {
+                list.innerHTML = '<div class="empty-message">No budget limits set yet.</div>';
+                return;
+            }
+            
+            const spent = getExpensesByCategory();
+            list.innerHTML = categories.map(category => {
+                const limit = budgetData.budgetLimits[category];
+                const spent_amount = spent[category] || 0;
+                const percentage = limit > 0 ? Math.min((spent_amount / limit) * 100, 100) : 0;
+                let fillClass = '';
+                if (percentage > 100) fillClass = 'danger';
+                else if (percentage > 80) fillClass = 'warning';
+                
+                return `
+                    <div style="margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <div style="flex: 1;">
+                                <div style="font-weight: 600; color: #e2e8f0;">${category}</div>
+                            </div>
+                            <button class="btn-danger" onclick="deleteBudgetLimit('${category}')">✕</button>
+                        </div>
+                        <div class="budget-bar">
+                            <div class="budget-header">
+                                <span class="amount">₱${spent_amount.toLocaleString()} / ₱${limit.toLocaleString()}</span>
+                                <span class="amount">${percentage.toFixed(0)}%</span>
+                            </div>
+                            <div class="budget-background">
+                                <div class="budget-fill ${fillClass}" style="width: ${percentage}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function updateBudgetStatus() {
+            const status = document.getElementById('budgetStatus');
+            const categories = Object.keys(budgetData.budgetLimits);
+            const spent = getExpensesByCategory();
+            
+            let html = '';
+            categories.forEach(category => {
+                const limit = budgetData.budgetLimits[category];
+                const spent_amount = spent[category] || 0;
+                const remaining = limit - spent_amount;
+                const statusColor = remaining >= 0 ? '#10b981' : '#f59e0b';
+                
+                html += `
+                    <div class="item">
+                        <div class="item-info">
+                            <div class="item-name">${category}</div>
+                            <div class="item-detail">Budget: ₱${limit.toLocaleString()}</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div class="item-value" style="color: ${statusColor}; font-weight: 600;">
+                                ${remaining >= 0 ? '₱' + remaining.toLocaleString() + ' left' : '₱' + Math.abs(remaining).toLocaleString() + ' over'}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            status.innerHTML = html || '<div class="empty-message">Set budget limits to see status.</div>';
+        }
+        
+        function updateGoalsList() {
+            const list = document.getElementById('goalsList');
+            if (budgetData.savingsGoals.length === 0) {
+                list.innerHTML = '<div class="empty-message">No savings goals yet.</div>';
+                return;
+            }
+            
+            list.innerHTML = budgetData.savingsGoals.map(goal => {
+                const percentage = goal.target > 0 ? Math.min((goal.current / goal.target) * 100, 100) : 0;
+                
+                return `
+                    <div class="item" style="flex-direction: column; align-items: stretch;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <div>
+                                <div class="item-name">${goal.name}</div>
+                                <div class="item-detail">Deadline: ${goal.deadline || 'Not set'}</div>
+                            </div>
+                            <button class="btn-danger" onclick="deleteGoal(${goal.id})">✕</button>
+                        </div>
+                        <div class="budget-bar">
+                            <div class="budget-header">
+                                <span class="amount">₱${goal.current.toLocaleString()} / ₱${goal.target.toLocaleString()}</span>
+                                <span class="amount">${percentage.toFixed(0)}%</span>
+                            </div>
+                            <div class="budget-background">
+                                <div class="budget-fill" style="width: ${percentage}%; background: linear-gradient(90deg, #10b981 0%, #34d399 100%);"></div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 12px; display: flex; align-items: center; gap: 8px;">
+                            <input type="number" placeholder="Update progress" style="flex: 1;" id="goal-${goal.id}" value="${goal.current}" />
+                            <button class="btn-secondary" onclick="updateGoalProgress(${goal.id}, document.getElementById('goal-${goal.id}').value)">Update</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function updateRecurringList() {
+            const list = document.getElementById('recurringList');
+            if (budgetData.recurringExpenses.length === 0) {
+                list.innerHTML = '<div class="empty-message">No recurring expenses yet.</div>';
+                return;
+            }
+            
+            list.innerHTML = budgetData.recurringExpenses.map(recurring => `
+                <div class="item">
+                    <div class="item-info">
+                        <div class="item-name">${recurring.name}</div>
+                        <div class="item-detail">${recurring.category} • ${recurring.frequency}</div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div class="item-value">₱${recurring.amount.toLocaleString()}</div>
+                        <button class="btn-danger" onclick="deleteRecurring(${recurring.id})">✕</button>
+                    </div>
+                </div>
+            `).join('');
+            
+            document.getElementById('recurringTotal').textContent = '₱' + getRecurringMonthly().toLocaleString();
+        }
+        
+        function updateDashboard() {
+            const carryOver = parseFloat(budgetData.carryOverBalance) || 0;
+            const currentIncome = getTotalIncome();
+            const totalAvailableFunds = carryOver + currentIncome;
+            
+            const expenses = getTotalExpenses();
+            const cushion = totalAvailableFunds - expenses;
+            
+            const goalsProgress = budgetData.savingsGoals.length > 0 
+                ? Math.round(budgetData.savingsGoals.reduce((sum, g) => sum + (g.target > 0 ? (g.current / g.target) : 0), 0) / budgetData.savingsGoals.length * 100)
+                : 0;
+            
+            document.getElementById('dashTotalIncome').textContent = '₱' + totalAvailableFunds.toLocaleString();
+            document.getElementById('dashTotalExpenses').textContent = '₱' + expenses.toLocaleString();
+            document.getElementById('dashNetBalance').textContent = '₱' + cushion.toLocaleString();
+            document.getElementById('dashGoalsProgress').textContent = goalsProgress + '%';
+        }
+        
+        function updateCategoryAnalysis() {
+            const spent = getExpensesByCategory();
+            const html = Object.entries(spent).map(([cat, amount]) => {
+                const limit = budgetData.budgetLimits[cat] || 0;
+                const percentage = limit ? (amount / limit) * 100 : 0;
+                return `
+                    <div class="item">
+                        <div class="item-info">
+                            <div class="item-name">${cat}</div>
+                            <div class="item-detail">${percentage > 0 ? `${percentage.toFixed(0)}% of budget` : 'No budget set'}</div>
+                        </div>
+                        <div class="item-value">₱${amount.toLocaleString()}</div>
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('categoryAnalysis').innerHTML = html || '<div class="empty-message">No expense data yet.</div>';
+        }
+        
+        function updateBudgetComparison() {
+            const spent = getExpensesByCategory();
+            const limits = budgetData.budgetLimits;
+            const categories = Object.keys(limits);
+            
+            const html = categories.map(cat => {
+                const spent_amount = spent[cat] || 0;
+                const limit = limits[cat];
+                const remaining = limit - spent_amount;
+                
+                return `
+                    <div style="margin-bottom: 16px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <div style="font-weight: 600;">${cat}</div>
+                            <div style="color: ${remaining >= 0 ? '#10b981' : '#f59e0b'}; font-weight: 600;">
+                                ${remaining >= 0 ? '+₱' + remaining.toLocaleString() : '-₱' + Math.abs(remaining).toLocaleString()}
+                            </div>
+                        </div>
+                        <div class="budget-background">
+                            <div class="budget-fill" style="width: ${limit > 0 ? Math.min((spent_amount / limit) * 100, 100) : 0}%; background: ${remaining >= 0 ? 'linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%)' : 'linear-gradient(90deg, #f59e0b 0%, #d97706 100%)'}"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('budgetComparison').innerHTML = html || '<div class="empty-message">Set budgets to compare.</div>';
+        }
+        
+        function updateReportsSummary() {
+            const carryOver = parseFloat(budgetData.carryOverBalance) || 0;
+            const currentIncome = getTotalIncome();
+            const availableFunds = carryOver + currentIncome;
+            const expenses = getTotalExpenses();
+            
+            document.getElementById('reportIncome').textContent = '₱' + availableFunds.toLocaleString();
+            document.getElementById('reportExpenses').textContent = '₱' + expenses.toLocaleString();
+        }
+
+        // ===== SETTINGS MANAGEMENT UI =====
+        function renderCategorySettings() {
+            const container = document.getElementById('renderCategorySettingsWrapper');
+            const managerList = document.getElementById('customCategoriesManagerList');
+            if (!container) return;
+
+            // Render Classification Matrix (Checkboxes)
+            container.innerHTML = budgetData.categories.map(category => {
+                const checked = isFixedExpense(category) ? 'checked' : '';
+                return `
+                    <div class="item" style="margin-bottom: 8px; background: rgba(15, 23, 42, 0.4);">
+                        <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
+                            <input type="checkbox" id="chk-fixed-${category}" ${checked} onchange="toggleCategoryClassification('${category}', this.checked)" style="width:20px; height:20px; cursor:pointer;" />
+                            <label for="chk-fixed-${category}" style="font-weight:600; color:#e2e8f0; cursor:pointer; user-select:none;">${category}</label>
+                        </div>
+                        <span style="font-size:0.8rem; font-weight:700; color: ${isFixedExpense(category) ? '#a78bfa' : '#3b82f6'}; background: ${isFixedExpense(category) ? 'rgba(139,92,246,0.15)' : 'rgba(59,130,246,0.15)'}; padding:4px 10px; border-radius:12px;">
+                            ${isFixedExpense(category) ? 'Fixed Obligation' : 'Flexible Spending'}
+                        </span>
+                    </div>
+                `;
+            }).join('');
+
+            // Render Deletion Management Row
+            if (managerList) {
+                if (budgetData.categories.length === 0) {
+                    managerList.innerHTML = '<div class="empty-message">No active app categories defined.</div>';
+                } else {
+                    managerList.innerHTML = budgetData.categories.map(category => `
+                        <div class="item" style="padding: 10px 16px; margin-bottom: 6px; background: rgba(30, 41, 59, 0.4);">
+                            <span style="color: #cbd5e1; font-weight: 500;">${category}</span>
+                            <button class="btn-danger" style="padding: 4px 8px; font-size: 0.75rem;" onclick="removeCustomCategory('${category}')">✕ Remove</button>
+                        </div>
+                    `).join('');
+                }
+            }
+        }
+
+        function toggleCategoryClassification(category, isFixed) {
+            if (!budgetData.fixedCategories) budgetData.fixedCategories = [];
+            
+            if (isFixed) {
+                if (!budgetData.fixedCategories.includes(category)) {
+                    budgetData.fixedCategories.push(category);
+                }
+            } else {
+                budgetData.fixedCategories = budgetData.fixedCategories.filter(c => c !== category);
+            }
+            saveData();
+        }
+
+        function createCustomCategory() {
+            const input = document.getElementById('customCategoryInput');
+            const name = input.value.trim();
+            if (!name) {
+                alert('Please enter a valid category designation label.');
+                return;
+            }
+            if (budgetData.categories.includes(name)) {
+                alert('This category designation already exists.');
+                return;
+            }
+            budgetData.categories.push(name);
+            input.value = '';
+            
+            dynamicSyncDropdowns();
+            saveData();
+        }
+
+        function removeCustomCategory(category) {
+            if (!confirm(`Are you sure you want to completely delete "${category}"? All associated budget limits will be removed.`)) return;
+            
+            budgetData.categories = budgetData.categories.filter(c => c !== category);
+            budgetData.fixedCategories = budgetData.fixedCategories.filter(c => c !== category);
+            if (budgetData.budgetLimits[category] !== undefined) {
+                delete budgetData.budgetLimits[category];
+            }
+            
+            dynamicSyncDropdowns();
+            saveData();
+        }
+
+        // Global Application Reset System 
+        function resetAllData() {
+            if (!confirm('⚠️ CRITICAL WARNING: You are about to wipe the entire local state, configuration targets, histories, and financial assets from application caches. Proceed?')) return;
+            
+            localStorage.removeItem('probudget_data');
+            budgetData = {
+                incomeSources: [],
+                budgetLimits: {},
+                savingsGoals: [],
+                recurringExpenses: [],
+                transactions: [],
+                carryOverBalance: 0,
+                categories: [
+                    'Housing/Bills', 'Food/Groceries', 'Transport', 
+                    'Entertainment', 'Utilities', 'Health', 'Education', 'Other'
+                ],
+                fixedCategories: [ 'Housing/Bills', 'Utilities', 'Health', 'Education' ]
+            };
+
+            const carryOverInput = document.getElementById('carryOverBalance');
+            if (carryOverInput) carryOverInput.value = '';
+
+            dynamicSyncDropdowns();
+            updateAllUI();
+            switchTab('dashboard');
+        }
+
+        // ===== FIN AI COACHING ENGINE ENGINE =====
+        function generateFINAnalysis() {
+            const carryOver = parseFloat(budgetData.carryOverBalance) || 0;
+            const currentIncome = getTotalIncome();
+            const availableFunds = carryOver + currentIncome;
+
+            const spentByCategory = getExpensesByCategory();
+            
+            // Calculate actual values paid/spent this month
+            let fixedExpensesPaid = 0;
+            let flexibleSpending = 0;
+            
+            Object.entries(spentByCategory).forEach(([cat, amt]) => {
+                if (isFixedExpense(cat)) {
+                    fixedExpensesPaid += amt;
+                } else {
+                    flexibleSpending += amt;
+                }
+            });
+
+            // Calculate forward projections for protected target metrics
+            let fixedBudgetObligations = budgetData.categories.reduce((sum, cat) => {
+                return isFixedExpense(cat) ? sum + (budgetData.budgetLimits[cat] || 0) : sum;
+            }, 0);
+            
+            // Fallback strategy if boundaries are unmapped
+            if (fixedBudgetObligations === 0) fixedBudgetObligations = fixedExpensesPaid;
+
+            const savingsGoalsCommitment = budgetData.savingsGoals.reduce((sum, g) => sum + Math.max(0, g.target - g.current), 0);
+            const recurringExpensesCommitment = getRecurringMonthly();
+
+            // Formula: protectedFunds = fixedExpenses + savingsGoals + recurringExpenses;
+            const protectedFunds = fixedBudgetObligations + savingsGoalsCommitment + recurringExpensesCommitment;
+            
+            // Formula: remainingSafeSpending = availableFunds - protectedFunds - flexibleSpending;
+            const remainingSafeSpending = availableFunds - protectedFunds - flexibleSpending;
+
+            // Determine Pacing Analysis Status
+            let spendingPace = "Healthy";
+            let coachingMessage = "";
+
+            if (remainingSafeSpending < 0) {
+                spendingPace = "Tight";
+                coachingMessage = "Protected expenses currently consume most available funds. Focus on essential purchases and review discretionary spending opportunities.";
+            } else if (flexibleSpending > (availableFunds - protectedFunds) * 0.75) {
+                spendingPace = "High";
+                coachingMessage = "Most obligations are covered. Discretionary spending is increasing faster than planned. Consider slowing non-essential purchases to maintain flexibility later this month.";
+            } else if (flexibleSpending > (availableFunds - protectedFunds) * 0.40) {
+                spendingPace = "Moderate";
+                coachingMessage = "Most obligations are covered. Discretionary spending is increasing at a manageable run-rate, but consider pacing non-essential purchases.";
+            } else {
+                spendingPace = "Healthy";
+                coachingMessage = "Your available cash remains healthy. Bills are covered and current spending is supported by existing reserves. You have ample flexibility for non-discretionary execution.";
+            }
+
+            // If cash reserves provide strong coverage insulation, optimize text patterns to avoid alarmist tones
+            if (carryOver > 0 && availableFunds - flexibleSpending - fixedExpensesPaid > protectedFunds * 0.5) {
+                if (spendingPace === "High" || spendingPace === "Moderate") {
+                    spendingPace = "Moderate";
+                    coachingMessage = "Most obligations are covered. Discretionary choice allocations are picking up run velocity, but structural allocations remain comfortably insulated by reserve balances.";
+                } else if (spendingPace === "Healthy") {
+                    coachingMessage = "Your available cash remains healthy. Bills are covered and current spending is supported by existing reserves.";
+                }
+            }
+
+            return {
+                spendingPace,
+                coachingMessage,
+                fixedExpensesPaid,
+                flexibleSpending,
+                protectedFunds,
+                remainingSafeSpending,
+                availableFunds
+            };
+        }
+
+        function updateFINAdvisor() {
+            const analysis = generateFINAnalysis();
+            
+            // Calculate Date parameters safely
+            const totalDaysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
+            const currentDay = currentDate.getDate();
+            const daysRemaining = Math.max(1, totalDaysInMonth - currentDay + 1);
+
+            // Refactored fixed expenses representation inside limits calculations
+            const fixedBudgetLimitsSum = budgetData.categories.reduce((sum, cat) => {
+                return isFixedExpense(cat) ? sum + (budgetData.budgetLimits[cat] || 0) : sum;
+            }, 0) || analysis.fixedExpensesPaid;
+            
+            const recurringExpenses = getRecurringMonthly();
+
+            // Formula: dailySafeToSpend = ( availableFunds - fixedExpenses - recurringExpenses - flexibleSpending ) / daysRemaining;
+            let dailySafeToSpend = (analysis.availableFunds - fixedBudgetLimitsSum - recurringExpenses - analysis.flexibleSpending) / daysRemaining;
+            if (dailySafeToSpend < 0) dailySafeToSpend = 0;
+
+            // DOM Binding Pipeline
+            const badgeEl = document.getElementById('finSpendingPaceBadge');
+            const messageEl = document.getElementById('finCoachingEngineText');
+            
+            if (badgeEl) {
+                let badgeColor = '#10b981'; // Green for health
+                if (analysis.spendingPace === 'Moderate') badgeColor = '#f59e0b'; // Amber
+                if (analysis.spendingPace === 'High' || analysis.spendingPace === 'Tight') badgeColor = '#3b82f6'; // Clean structural blue indicator
+
+                badgeEl.innerHTML = `
+                    <span class="progress-badge" style="background: ${badgeColor}22; color: ${badgeColor}; border: 1px solid ${badgeColor}44; padding: 6px 14px; font-size: 0.85rem; border-radius: 20px; margin-left: 0;">
+                        ${analysis.spendingPace} Pace
+                    </span>
+                `;
+            }
+
+            if (messageEl) {
+                messageEl.textContent = analysis.coachingMessage;
+            }
+
+            // Health Table Formatting Bindings
+            if (document.getElementById('finFixedPaid')) document.getElementById('finFixedPaid').textContent = '₱' + analysis.fixedExpensesPaid.toLocaleString(undefined, {maximumFractionDigits: 0});
+            if (document.getElementById('finFlexibleSpent')) document.getElementById('finFlexibleSpent').textContent = '₱' + analysis.flexibleSpending.toLocaleString(undefined, {maximumFractionDigits: 0});
+            if (document.getElementById('finProtectedFunds')) document.getElementById('finProtectedFunds').textContent = '₱' + analysis.protectedFunds.toLocaleString(undefined, {maximumFractionDigits: 0});
+            
+            const remainingSafeEl = document.getElementById('finRemainingSafe');
+            if (remainingSafeEl) {
+                remainingSafeEl.textContent = '₱' + analysis.remainingSafeSpending.toLocaleString(undefined, {maximumFractionDigits: 0});
+                remainingSafeEl.style.color = analysis.remainingSafeSpending >= 0 ? '#10b981' : '#f59e0b';
+            }
+
+            if (document.getElementById('finDailySafeToSpend')) {
+                document.getElementById('finDailySafeToSpend').textContent = '₱' + dailySafeToSpend.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) + '/day';
+            }
+        }
+        
+        // ===== CHARTS =====
+        function renderCategoryChart() {
+            const spent = getExpensesByCategory();
+            const ctx = document.getElementById('categoryChart');
+            if (!ctx) return;
+            
+            if (charts.category) charts.category.destroy();
+            
+            if (Object.keys(spent).length === 0) {
+                // Display placeholder parameters if no data values are actively configured
+                charts.category = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['No Active Expenses This Month'],
+                        datasets: [{
+                            data: [1],
+                            backgroundColor: ['rgba(71, 85, 105, 0.2)'],
+                            borderColor: '#1e293b',
+                            borderWidth: 3
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#94a3b8' } } } }
+                });
+                return;
+            }
+
+            charts.category = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(spent),
+                    datasets: [{
+                        data: Object.values(spent),
+                        backgroundColor: [
+                            '#3b82f6', '#8b5cf6', '#ec4899', '#f59e0b',
+                            '#10b981', '#14b8a6', '#06b6d4', '#6366f1'
+                        ],
+                        borderColor: '#1e293b',
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: '#94a3b8' } }
+                    }
+                }
+            });
+        }
+        
+        function renderTrendChart() {
+            const ctx = document.getElementById('trendChart');
+            if (!ctx) return;
+            
+            const labels = [];
+            const data = [];
+            for (let i = 5; i >= 0; i--) {
+                const d = new Date(currentDate.getFullYear(), currentDate.getMonth() - i, 1);
+                labels.push(d.toLocaleString('default', { month: 'short' }));
+                
+                const spent = budgetData.transactions
+                    .filter(t => {
+                        const td = new Date(t.date);
+                        return td.getMonth() === d.getMonth() && td.getFullYear() === d.getFullYear();
+                    })
+                    .reduce((sum, t) => sum + t.amount, 0);
+                data.push(spent);
+            }
+            
+            if (charts.trend) charts.trend.destroy();
+            
+            charts.trend = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [{
+                        label: 'Expenses',
+                        data,
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { labels: { color: '#94a3b8' } } },
+                    scales: {
+                        y: { grid: { color: 'rgba(51, 65, 85, 0.2)' }, ticks: { color: '#94a3b8' } },
+                        x: { grid: { color: 'rgba(51, 65, 85, 0.2)' }, ticks: { color: '#94a3b8' } }
+                    }
+                }
+            });
+        }
+        
+        function renderSavingsRateChart() {
+            const ctx = document.getElementById('savingsRateChart');
+            if (!ctx) return;
+            
+            const carryOver = parseFloat(budgetData.carryOverBalance) || 0;
+            const currentIncome = getTotalIncome();
+            const totalPortfolioFunds = carryOver + currentIncome;
+            
+            const expenses = getTotalExpenses();
+            const remainingAssetCushion = totalPortfolioFunds - expenses;
+            
+            // Calculate retention index base using total available funding resources to avoid vacuum metrics distortions
+            const cushionRate = totalPortfolioFunds > 0 ? (remainingAssetCushion / totalPortfolioFunds) * 100 : 0;
+            const spentRate = 100 - Math.max(0, Math.min(100, cushionRate));
+            
+            if (charts.savingsRate) charts.savingsRate.destroy();
+            
+            charts.savingsRate = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Financial Cushion Retention', 'Spent Portfolio Resources'],
+                    datasets: [{
+                        data: [Math.max(0, cushionRate), spentRate],
+                        backgroundColor: ['#10b981', '#3b82f6'],
+                        borderColor: '#1e293b',
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: '#94a3b8' } }
+                    }
+                }
+            });
+        }
+        
+        // ===== MAIN UPDATE PUMP =====
+        function updateAllUI() {
+            updateIncomeSourcesList();
+            updateBudgetsList();
+            updateBudgetStatus();
+            updateGoalsList();
+            updateRecurringList();
+            updateDashboard();
+            updateCategoryAnalysis();
+            updateBudgetComparison();
+            updateReportsSummary();
+            renderCategorySettings();
+            updateFINAdvisor();
+        }
+        
+        // Initialize Core System Engine On Deployment
+        loadData();
+    </script>
+</body>
+</html>
