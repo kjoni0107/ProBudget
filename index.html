@@ -174,80 +174,242 @@
         }
 
         /* ---------------------------------------------------
-           LIGHT MODE VISUAL UPGRADE
+           LIGHT MODE — PREMIUM UPGRADE
         -----------------------------------------------------*/
         body.light-mode {
-            --bg-deep: #f1f5f9;
+            --bg-deep: #eef2f7;
             --bg-mid: #ffffff;
-            --glass: rgba(255, 255, 255, 0.85);
+            --glass: rgba(255, 255, 255, 0.92);
             --glass-solid: #ffffff;
-            --glass-hover: rgba(248, 250, 252, 0.95);
-            --glass-border: rgba(15, 23, 42, 0.08);
-            --glass-border-bright: rgba(15, 23, 42, 0.15);
-            --glass-shadow: 0 12px 24px -4px rgba(15, 23, 42, 0.06), 0 4px 12px -2px rgba(15, 23, 42, 0.04);
+            --glass-hover: rgba(248, 250, 252, 0.98);
+            --glass-border: rgba(99, 120, 160, 0.12);
+            --glass-border-bright: rgba(56, 139, 248, 0.22);
+            --glass-shadow: 0 4px 24px -4px rgba(30, 64, 120, 0.10), 0 1px 4px rgba(30,64,120,0.06);
             --text-main: #0f172a;
-            --text-muted: #334155;
-            --text-soft: #1e293b;
+            --text-muted: #475569;
+            --text-soft: #334155;
+            --success-glow: rgba(16, 185, 129, 0.10);
+            --danger-glow: rgba(244, 63, 94, 0.10);
+            --gold-glow: rgba(251, 191, 36, 0.10);
         }
+
+        /* Light mode background — subtle blue-white gradient */
+        body.light-mode {
+            background: #eef2f7;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.06) 0%, transparent 50%);
+        }
+
         body.light-mode input, body.light-mode select {
             background: #f8fafc;
             color: var(--text-main);
-            border: 1px solid #cbd5e1;
+            border: 1.5px solid #d1dae8;
             font-weight: 600;
         }
         body.light-mode input:focus, body.light-mode select:focus {
             background: #ffffff;
             border-color: var(--accent-blue);
-            box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.15);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
         }
-        body.light-mode .time-nav, body.light-mode .view-toggle-container, body.light-mode .theme-switcher, body.light-mode #lightModeToggleBtn {
+        body.light-mode input::placeholder { color: #94a3b8; }
+
+        body.light-mode .time-nav,
+        body.light-mode .view-toggle-container,
+        body.light-mode .theme-switcher,
+        body.light-mode #lightModeToggleBtn {
             background: #ffffff;
-            border: 1px solid var(--glass-border-bright);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            border: 1.5px solid #d1dae8;
+            box-shadow: 0 1px 4px rgba(30,64,120,0.06);
             color: var(--text-main);
         }
-        body.light-mode .btn-initialize {
-            color: #ffffff;
-        }
-        body.light-mode [style*="color: #fff;"], body.light-mode [style*="color:#fff;"] {
-            color: var(--text-main) !important;
-        }
-        body.light-mode .card, body.light-mode .stat-box, body.light-mode .item, body.light-mode .ai-metric-card, body.light-mode .ai-report-container {
+        body.light-mode .time-nav:hover { border-color: var(--accent-blue); }
+
+        body.light-mode .btn-initialize { color: #ffffff; }
+
+        body.light-mode .card {
             background: #ffffff;
-            border: 1px solid var(--glass-border-bright);
-            box-shadow: var(--glass-shadow);
+            border: 1.5px solid #e2e9f3;
+            box-shadow: 0 2px 16px -4px rgba(30, 64, 120, 0.08), 0 1px 3px rgba(30,64,120,0.04);
         }
-        body.light-mode .card:hover, body.light-mode .stat-box:hover, body.light-mode .item:hover {
+        body.light-mode .card:hover {
+            border-color: rgba(56, 189, 248, 0.4);
+            box-shadow: 0 8px 32px -8px rgba(30, 64, 120, 0.14);
+        }
+
+        body.light-mode .stat-box {
+            background: linear-gradient(145deg, #ffffff 0%, #f8fbff 100%);
+            border: 1.5px solid #e2e9f3;
+            box-shadow: 0 2px 12px -4px rgba(30, 64, 120, 0.08);
+        }
+        body.light-mode .stat-box:hover {
             border-color: var(--accent-blue);
-            box-shadow: 0 16px 32px -8px rgba(15, 23, 42, 0.1);
+            box-shadow: 0 8px 24px -6px rgba(56, 189, 248, 0.18);
         }
+
+        body.light-mode .item {
+            background: linear-gradient(145deg, #ffffff 0%, #f8fbff 100%);
+            border: 1.5px solid #e2e9f3;
+            border-left-width: 4px;
+        }
+        body.light-mode .item:hover {
+            border-color: rgba(56, 189, 248, 0.35);
+            background: #ffffff;
+            box-shadow: 0 4px 16px -4px rgba(30, 64, 120, 0.10);
+        }
+
+        body.light-mode .tab-btn { color: var(--text-muted); }
+        body.light-mode .tab-btn:hover { background: rgba(56, 189, 248, 0.07); color: var(--text-main); }
+        body.light-mode .tab-btn.active {
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.12), rgba(45, 212, 191, 0.10));
+            border-color: var(--accent-blue);
+            color: #0369a1;
+            box-shadow: 0 2px 12px rgba(56, 189, 248, 0.12);
+        }
+
+        body.light-mode .tabs {
+            border-bottom-color: #e2e9f3;
+        }
+
         body.light-mode .delta-table {
             background: #ffffff;
-            border: 1px solid var(--glass-border-bright);
+            border: 1.5px solid #e2e9f3;
         }
         body.light-mode .delta-table th {
             color: var(--text-muted);
-            border-bottom: 1px solid var(--glass-border);
+            background: #f8fbff;
+            border-bottom: 1.5px solid #e2e9f3;
         }
-        body.light-mode .delta-table td {
-            border-bottom: 1px solid var(--glass-border);
-        }
-        body.light-mode .delta-table tr:hover td {
-            background: #f8fafc;
-        }
-        body.light-mode .tab-btn.active {
-            background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(45, 212, 191, 0.15));
-            border-color: var(--accent-blue);
-            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.1);
-            color: var(--accent-blue);
-        }
+        body.light-mode .delta-table td { border-bottom: 1px solid #f0f4fa; }
+        body.light-mode .delta-table tr:hover td { background: #f8fbff; }
+
         body.light-mode .chart-container {
-            background: #f8fafc;
-            border: 1px solid var(--glass-border);
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+            background: #f8fbff;
+            border: 1.5px solid #e2e9f3;
         }
-        body.light-mode .header h1, body.light-mode .card h3 {
+
+        body.light-mode .header h1 { color: var(--text-main); }
+        body.light-mode .card h3 { color: var(--text-main); }
+
+        body.light-mode .motivational-banner {
+            background: rgba(16, 185, 129, 0.08);
+            border-color: rgba(16, 185, 129, 0.25);
+        }
+        body.light-mode .motivational-banner b { color: var(--text-main); }
+        body.light-mode .motivational-banner.warning {
+            background: rgba(244, 63, 94, 0.07);
+            border-color: rgba(244, 63, 94, 0.2);
+        }
+        body.light-mode .motivational-banner.neutral {
+            background: #f8fbff;
+            border-color: #e2e9f3;
+        }
+
+        body.light-mode .alert-banner-box {
+            background: rgba(16, 185, 129, 0.07);
+            border-color: rgba(16, 185, 129, 0.2);
+        }
+        body.light-mode .alert-banner-box.warning {
+            background: rgba(244, 63, 94, 0.07);
+            border-color: rgba(244, 63, 94, 0.2);
+        }
+
+        body.light-mode .empty-message {
+            background: #f8fbff;
+            border-color: #d1dae8;
+            color: var(--text-muted);
+        }
+
+        body.light-mode .counter-widget {
+            background: rgba(56, 189, 248, 0.08);
+            border-color: rgba(56, 189, 248, 0.2);
+            color: #0369a1;
+        }
+
+        body.light-mode .help-icon {
+            background: #f8fbff;
+            border-color: #d1dae8;
+            color: var(--text-muted);
+        }
+        body.light-mode .help-icon:hover {
+            background: var(--accent-blue);
+            color: #fff;
+            border-color: var(--accent-blue);
+        }
+
+        /* FIN panel in light mode */
+        body.light-mode .bot-panel-wrapper {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(255,255,255,0.97) 100%);
+            border-color: rgba(139, 92, 246, 0.2);
+            box-shadow: 0 4px 24px rgba(139, 92, 246, 0.07);
+        }
+        body.light-mode .bot-advisor-header {
+            border-bottom-color: rgba(139, 92, 246, 0.12);
+            background: rgba(139, 92, 246, 0.04);
+        }
+        body.light-mode .bot-insight-box {
+            background: #f8fbff;
+            border-color: #e2e9f3;
+        }
+        body.light-mode .bot-insight-box:hover {
+            background: #ffffff;
+            border-color: rgba(56, 189, 248, 0.3);
+        }
+        body.light-mode .bot-advisor-name,
+        body.light-mode .bot-report-title { color: var(--text-main); }
+
+        /* Modal in light mode */
+        body.light-mode .modal-box {
+            background: #ffffff;
+            border-color: #e2e9f3;
+        }
+        body.light-mode .modal-title { color: var(--text-main); }
+        body.light-mode .modal-close {
+            background: #f8fbff;
+            border-color: #d1dae8;
+            color: var(--text-muted);
+        }
+
+        /* User badge in light mode */
+        body.light-mode .user-count-badge {
+            background: rgba(255,255,255,0.95);
+            border-color: #d1dae8;
+            box-shadow: 0 2px 12px rgba(30,64,120,0.10);
             color: var(--text-main);
+        }
+
+        /* Progress bar track in light mode */
+        body.light-mode .progress-bar-track { background: #e8eef7; }
+
+        /* Toggle slider in light mode */
+        body.light-mode .toggle-slider { background: #d1dae8; border-color: #bbc8dc; }
+        body.light-mode .toggle-slider:before { background: #94a3b8; }
+        body.light-mode input:checked + .toggle-slider { background: linear-gradient(135deg, var(--accent-blue), var(--accent-teal)); }
+        body.light-mode input:checked + .toggle-slider:before { background: #ffffff; }
+
+        /* Select arrow in light mode */
+        body.light-mode select {
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23475569%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+        }
+        body.light-mode select option { background: #ffffff; color: var(--text-main); }
+
+        /* Btn mini in light mode */
+        body.light-mode .btn-mini {
+            background: rgba(56, 189, 248, 0.08);
+            border-color: rgba(56, 189, 248, 0.25);
+            color: #0369a1;
+        }
+        body.light-mode .btn-mini:hover {
+            background: rgba(56, 189, 248, 0.15);
+            border-color: var(--accent-blue);
+        }
+
+        /* Welcome panel in light mode */
+        body.light-mode #welcome-overlay { background: rgba(238, 242, 247, 0.92); }
+        body.light-mode .welcome-panel {
+            background: #ffffff;
+            border-color: #e2e9f3;
+            box-shadow: 0 20px 60px rgba(30, 64, 120, 0.15);
         }
         /* --------------------------------------------------- */
 
@@ -538,7 +700,7 @@
         .modal-text li { margin-bottom: 8px; }
 
         /* ---------------------------------------------------
-           FIN AI ADVISOR — PREMIUM VISUAL REDESIGN
+           FIN AI ADVISOR — PREMIUM VISUAL
         -----------------------------------------------------*/
         .bot-panel-wrapper {
             display: none; margin-top: 24px;
@@ -548,11 +710,6 @@
             overflow: hidden;
             box-shadow: 0 0 40px rgba(139, 92, 246, 0.08), inset 0 1px 0 rgba(255,255,255,0.04);
             position: relative;
-        }
-        body.light-mode .bot-panel-wrapper {
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.04) 0%, rgba(255,255,255,0.92) 100%);
-            border-color: rgba(139, 92, 246, 0.18);
-            box-shadow: 0 4px 24px rgba(139, 92, 246, 0.06);
         }
         .bot-panel-wrapper::before {
             content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
@@ -565,10 +722,6 @@
             padding: 16px 20px;
             border-bottom: 1px solid rgba(139, 92, 246, 0.12);
             background: rgba(139, 92, 246, 0.04);
-        }
-        body.light-mode .bot-advisor-header {
-            border-bottom-color: rgba(139, 92, 246, 0.1);
-            background: rgba(139, 92, 246, 0.03);
         }
 
         .bot-advisor-avatar {
@@ -632,15 +785,6 @@
             background: rgba(255,255,255,0.04);
             border-color: rgba(255,255,255,0.1);
         }
-        body.light-mode .bot-insight-box {
-            background: rgba(15, 23, 42, 0.03);
-            border-color: rgba(15, 23, 42, 0.08);
-        }
-        body.light-mode .bot-insight-box:hover {
-            background: rgba(15, 23, 42, 0.05);
-        }
-        body.light-mode .bot-advisor-name,
-        body.light-mode .bot-report-title { color: var(--text-main); }
         /* --------------------------------------------------- */
 
         .footer-signature {
@@ -787,7 +931,6 @@
                 <div id="dashboardMessage"></div>
 
                 <div class="bot-panel-wrapper" id="aiBotPanel">
-                    <!-- Gradient top bar via CSS ::before -->
                     <div class="bot-advisor-header">
                         <div class="bot-advisor-avatar">🤖</div>
                         <div class="bot-advisor-header-text">
@@ -1037,13 +1180,13 @@
         }
 
         const helpContentDictionary = {
-            dashboard: { title: "📊 Using the Dashboard", text: "The Dashboard is your main financial control center.<br><br><ul><li><b>Time Filter:</b> Toggle between 'This Month' and 'Year-To-Date' (YTD) to see micro vs macro performance.</li><li><b>Safe to Spend:</b> Shows your truly uncommitted remaining cash after deducting your configured budget caps and all fixed recurring bills. A 20% savings buffer is automatically reserved from whatever is left, so this number reflects only what is genuinely safe to spend freely.</li><li><b>AI Advisor:</b> Toggle this on to get automatic written guidance based on your spending behavior.</li></ul>" },
+            dashboard: { title: "📊 Using the Dashboard", text: "The Dashboard is your main financial control center.<br><br><ul><li><b>Time Filter:</b> Toggle between 'This Month' and 'Year-To-Date' (YTD) to see micro vs macro performance.</li><li><b>Safe to Spend:</b> Shows your truly uncommitted remaining cash after deducting your configured budget caps and all fixed recurring bills. A 20% savings buffer is automatically reserved from whatever is left, so this number reflects only what is genuinely safe to spend freely. Note: expenses in categories that have NO budget cap set do not count against Safe to Spend.</li><li><b>AI Advisor:</b> Toggle this on to get automatic written guidance based on your spending behavior.</li></ul>" },
             velocity: { title: "📈 Day-to-Day Velocity", text: "This chart tracks your 'Burn Rate'.<br><br>The dotted line is your monthly limit. The solid line is your actual cumulative spending. If the solid line crosses above the dotted line, you are spending money faster than you should be for that point in the month." },
             cashflow: { title: "💸 Cash Flow Trend", text: "A visual breakdown of Money In vs Money Out.<br><br>The green bars are your income deposits. The red bars are your expenses. The orange line represents your net cumulative cash flow over time. If the line drops, you are losing cash." },
             matrix: { title: "📅 YTD Performance Matrix", text: "A strict month-over-month accounting ledger.<br><br>It separates your outlays into <b>Fixed Costs</b> (Things you must pay, like housing/utilities) and <b>Variable Outlays</b> (Things you control, like food/gaming). It calculates your actual savings efficiency rate per month." },
             transactions: { title: "💸 Managing Transactions", text: "This is where you log every time money moves.<br><br><ul><li>Select Income (+) for money entering, or Expense (-) for money leaving.</li><li>Categorize it correctly so the charts update accurately.</li><li>Use the Search bar and Category filter below to easily find past purchases.</li></ul>" },
             income: { title: "💵 Expected Income", text: "Map out money you expect to receive.<br><br>Put in your monthly salary or expected one-time payments. Once the money actually hits your bank, click <b>✔ Mark Received</b> to automatically convert it into a logged Transaction." },
-            budgets: { title: "📍 Setting Budgets", text: "Set hard maximum spending caps for specific categories.<br><br>Example: Set 'Food & Dining' to ₱5000. The Dashboard will now track your food expenses against this limit. If you try to log a transaction that pushes you over the cap, the system will warn you." },
+            budgets: { title: "📍 Setting Budgets", text: "Set hard maximum spending caps for specific categories.<br><br>Example: Set 'Food & Dining' to ₱5000. The Dashboard will now track your food expenses against this limit. If you try to log a transaction that pushes you over the cap, the system will warn you. Only expenses in categories with a cap set will count against your Safe to Spend." },
             goals: { title: "🎯 Savings Goals", text: "Track your progress towards big purchases or emergency funds.<br><br>Set a name, target amount, and deadline. The system will tell you exactly how much you need to save per month to hit your deadline. Use the '+ Add Savings' input to manually move funds into the goal bucket." },
             recurring: { title: "🔄 Fixed Bills & Subscriptions", text: "Track things that charge you automatically.<br><br>Input your rent, Netflix, gym memberships, etc., and pick the day of the month they are due. The Dashboard will flash a warning alert when a bill's due date is within 5 days." }
         };
@@ -1073,11 +1216,11 @@
                     cycleTotalDays = totalDaysInMonth - 15;
                 }
             } else if (targetYM < systemYM) {
-                cycle = 2; // For past months, treat as fully completed Cycle 2
+                cycle = 2;
                 remainingDaysInCycle = 1;
                 cycleTotalDays = totalDaysInMonth - 15;
             } else {
-                cycle = 1; // Future months
+                cycle = 1;
                 remainingDaysInCycle = 15;
             }
 
@@ -1099,7 +1242,7 @@
             }
             const currentCycleIncome = Math.max(cycleActualIncome, cycleExpectedIncome);
 
-            // Carryover & Surplus (Historical Net Flow represents Wallet Balances + Carryover + Surplus)
+            // Carryover & Surplus
             let existingCarryoverCash = 0;
             if (sysData.transactions) {
                 if (cycle === 1) {
@@ -1111,7 +1254,7 @@
                         if (t.date < targetYM + "-01") return true; 
                         if (t.date.startsWith(targetYM)) {
                             const d = parseInt(t.date.split('-')[2]);
-                            return d <= 15; // Net flow of Cycle 1 becomes carryover for Cycle 2
+                            return d <= 15;
                         }
                         return false;
                     }).reduce((s, t) => s + (t.type === 'income' ? t.amount : -t.amount), 0);
@@ -1131,19 +1274,37 @@
                 }).reduce((sum, r) => sum + (Number(r.amount) || 0), 0);
             }
 
-            // Variable Spending within this active cycle
-            let currentCycleVariableSpent = 0;
+            // ---------------------------------------------------------------
+            // FIX: Variable Spending — ONLY count expenses whose category has
+            // a budget cap set. Unbudgeted categories (e.g. "Other", "Loan")
+            // are tracked separately and do NOT reduce Safe to Spend.
+            // ---------------------------------------------------------------
+            const budgetedCategories = sysData.budgets ? Object.keys(sysData.budgets) : [];
+
+            let currentCycleVariableSpent = 0;   // in-budget categories only → counts against caps & Safe to Spend
+            let currentCycleUnbudgetedSpent = 0; // outside budget caps → informational only, does NOT affect Safe to Spend
+
             if (sysData.transactions) {
-                currentCycleVariableSpent = sysData.transactions.filter(t => {
+                sysData.transactions.filter(t => {
                     if (t.type !== 'expense' || !t.date || !t.date.startsWith(targetYM)) return false;
-                    const isFixed = sysData.recurring?.some(r => (t.name || '').toLowerCase().includes((r.name || '').toLowerCase()));
+                    // Exclude anything that matches a recurring bill name
+                    const isFixed = sysData.recurring?.some(r =>
+                        (t.name || '').toLowerCase().includes((r.name || '').toLowerCase())
+                    );
                     if (isFixed) return false;
                     const d = parseInt(t.date.split('-')[2]);
                     return cycle === 1 ? (d <= 15) : (d > 15);
-                }).reduce((sum, t) => sum + t.amount, 0);
+                }).forEach(t => {
+                    if (budgetedCategories.includes(t.category)) {
+                        currentCycleVariableSpent += t.amount;
+                    } else {
+                        currentCycleUnbudgetedSpent += t.amount;
+                    }
+                });
             }
+            // ---------------------------------------------------------------
 
-            // Available Cycle Cash & Safe To Spend Calculation
+            // Available Cycle Cash — only budgeted variable spend is deducted here
             const availableCycleCash = currentCycleIncome + existingCarryoverCash - activeCycleBudgetCap - activeCycleFixedBills;
             const safeToSpendPerDay = Math.max(0, availableCycleCash / remainingDaysInCycle);
 
@@ -1151,7 +1312,7 @@
                 targetYM, cycle, remainingDaysInCycle, cycleTotalDays,
                 currentCycleIncome, existingCarryoverCash, activeCycleBudgetCap,
                 activeCycleFixedBills, availableCycleCash, safeToSpendPerDay,
-                currentCycleVariableSpent, totalMonthlyCaps
+                currentCycleVariableSpent, currentCycleUnbudgetedSpent, totalMonthlyCaps
             };
         }
         // ------------------------------------------
@@ -1807,7 +1968,7 @@
                                 <div class="item-info"><div class="item-name" style="font-size:1.05rem;">${c} <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 500; margin-left: 6px;">(${periodLabel})</span> ${overBudget ? '<span style="color:var(--danger); font-size:0.75rem; margin-left:6px; font-weight:700;">⚠️ Over Cap</span>' : ''}</div><div class="item-detail">Spent: ₱${periodSpent.toLocaleString()} / ₱${periodLimit.toLocaleString()}</div></div>
                                 <div style="font-weight:800; font-size:1.1rem; color: ${overBudget ? 'var(--danger)' : 'var(--text-main)'}">${periodLimit > 0 ? Math.round((periodSpent/periodLimit)*100) : 0}%</div>
                             </div>
-                            <div class="progress-container"><div class="progress-bar-track" style="height:8px;"><div class="progress-bar-fill" style="width: ${percent}%; background: ${overBudget ? 'var(--danger)' : 'linear-gradient(90deg, var(--accent-blue), var(--accent-teal))'};"></div></div></div>
+                            <div class="progress-container"><div class="progress-bar-track" style="height:8px;"><div class="progress-bar-fill" style="width: ${percent}%; background: ${overBudget ? 'var(--danger)' : 'linear-gradient(90deg, var(--accent-blue), var(--accent-teal))'};" ></div></div></div>
                         </div>`;
                     }).join('');
 
@@ -1863,9 +2024,10 @@
 
             burnRateEl.style.fontSize = "";
             const m = computeCycleAwareFramework(data);
-            const totalCash = m.existingCarryoverCash + m.currentCycleIncome;
-            const remainingCash = totalCash - m.activeCycleBudgetCap - m.activeCycleFixedBills;
-            const safeToSpend = Math.max(0, remainingCash * 0.8);
+
+            // availableCycleCash already only deducted budget caps + fixed bills (not unbudgeted spend)
+            // So Safe to Spend = 80% of remaining cash after those two deductions
+            const safeToSpend = Math.max(0, m.availableCycleCash * 0.8);
 
             if (safeToSpend <= 0) {
                 burnRateEl.textContent = "₱0";
@@ -1988,11 +2150,11 @@
 
             if (!dailyMsgBox || !monthlyMsgBox) return;
 
-            // --- Calculation Logic for the AI Blocks ---
-            const totalCash = m.existingCarryoverCash + m.currentCycleIncome;
-            const remainingCash = totalCash - m.activeCycleBudgetCap - m.activeCycleFixedBills;
-            const savingsReserve = Math.max(0, remainingCash * 0.2); // 20% automatically reserved
-            const safeToSpend = Math.max(0, remainingCash * 0.8);   // 80% is freely spendable
+            // --- Safe to Spend Calculation ---
+            // availableCycleCash = income + carryover - budget caps - fixed bills
+            // Unbudgeted expenses do NOT reduce this — they are shown separately
+            const savingsReserve = Math.max(0, m.availableCycleCash * 0.2);
+            const safeToSpend = Math.max(0, m.availableCycleCash * 0.8);
 
             // 1. Top Insight Box (Safe to Spend & Risks)
             let dailyHTML = `<div style="font-size: 0.75rem; font-weight: 800; color: #f59e0b; text-transform: uppercase; margin-bottom: 8px;">Safe to Spend & Risks</div>`;
@@ -2010,19 +2172,25 @@
                 </div>`;
             }
 
+            // Pacing: ONLY budgeted-category spend counts against your caps
             const cycleUsagePercent = m.activeCycleBudgetCap > 0 ? Math.round((m.currentCycleVariableSpent / m.activeCycleBudgetCap) * 100) : 0;
             let pacingColor = cycleUsagePercent > 100 ? 'var(--danger)' : 'var(--accent-blue)';
             let pacingText = cycleUsagePercent > 100 ? 'You are over spending!' : 'Great pace!';
 
-            dailyHTML += `<div style="color: ${pacingColor}; font-size: 0.9rem; font-weight: 500; margin-top: 10px;">📈 <strong>Pacing Info:</strong> You have used ${cycleUsagePercent}% of your allowance for this half of the month. ${pacingText}</div>`;
+            dailyHTML += `<div style="color: ${pacingColor}; font-size: 0.9rem; font-weight: 500; margin-top: 10px;">📈 <strong>Pacing Info:</strong> You have used ${cycleUsagePercent}% of your budgeted allowance for this half of the month. ${pacingText}</div>`;
+
+            // Unbudgeted spending — informational note, clearly does NOT affect Safe to Spend
+            if ((m.currentCycleUnbudgetedSpent || 0) > 0) {
+                dailyHTML += `<div style="color: var(--text-muted); font-size: 0.85rem; font-weight: 500; margin-top: 8px; padding: 8px 12px; border-radius: 8px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);">ℹ️ <strong>Outside budget caps:</strong> ₱${Math.round(m.currentCycleUnbudgetedSpent).toLocaleString()} spent in categories with no budget limit — this does <em>not</em> reduce Safe to Spend, but keep an eye on it.</div>`;
+            }
             
             dailyMsgBox.innerHTML = dailyHTML;
 
             // 2. Bottom Insight Box (Your Account Balances / Budget Health)
+            // Budget health is based only on budgeted categories vs caps
             const budgetRatio = m.activeCycleBudgetCap > 0 ? (m.currentCycleVariableSpent / m.activeCycleBudgetCap) : 0;
             let healthIcon = budgetRatio > 1.0 ? '❌' : '✅';
-            
-            let planText = budgetRatio > 1.0 ? '<span style="color:var(--danger);">You have exceeded your plan limits.</span>' : 'You are following your financial plan.';
+            let planText = budgetRatio > 1.0 ? '<span style="color:var(--danger);">You have exceeded your budgeted cap limits.</span>' : 'You are following your financial plan.';
 
             // Calculate ACTUALLY paid bills vs still outstanding (from paidMonths records)
             const evalYM = new Date().toISOString().substring(0, 7);
@@ -2033,15 +2201,23 @@
 
             let monthlyHTML = `
                 <div style="font-size: 0.75rem; font-weight: 800; color: var(--accent-purple); text-transform: uppercase; margin-bottom: 8px;">Your Account Balances</div>
-                <div style="font-size: 0.95rem; line-height: 1.6; color: var(--text-main);">
+                <div style="font-size: 0.95rem; line-height: 1.8; color: var(--text-main);">
                     ${healthIcon} Budget Health<br>
-                    Fixed bills committed this cycle: ₱${m.activeCycleFixedBills.toLocaleString()}<br>
+                    Fixed bills this cycle: ₱${m.activeCycleFixedBills.toLocaleString()}<br>
                     <span style="color:var(--success); font-weight:600;">✓ Paid so far: ₱${paidFixedTotal.toLocaleString()}</span><br>
-                    <span style="color:${unpaidFixedTotal > 0 ? 'var(--gold)' : 'var(--text-muted)'}; font-weight:600;">⏳ Still outstanding: ₱${unpaidFixedTotal.toLocaleString()}</span><br><br>
-                    Variable spending: ₱${m.currentCycleVariableSpent.toLocaleString()}<br>
-                    Remaining discretionary budget: ₱${Math.max(0, m.activeCycleBudgetCap - m.currentCycleVariableSpent).toLocaleString()}<br><br>
-                    ${planText}
+                    <span style="color:${unpaidFixedTotal > 0 ? 'var(--gold)' : 'var(--text-muted)'}; font-weight:600;">⏳ Still outstanding: ₱${unpaidFixedTotal.toLocaleString()}</span>
                 </div>
+                <div style="margin-top: 12px; padding: 10px 14px; border-radius: 10px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);">
+                    <div style="font-size: 0.8rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Variable Spending Breakdown</div>
+                    <div style="font-size: 0.9rem; line-height: 1.7; color: var(--text-main);">
+                        <span style="font-weight:700;">Budgeted spend:</span> ₱${m.currentCycleVariableSpent.toLocaleString()} <span style="font-size:0.8rem; color:var(--text-muted);">(counts against your caps)</span><br>
+                        ${(m.currentCycleUnbudgetedSpent || 0) > 0
+                            ? `<span style="font-weight:700; color:var(--gold);">Unbudgeted spend:</span> ₱${Math.round(m.currentCycleUnbudgetedSpent).toLocaleString()} <span style="font-size:0.8rem; color:var(--text-muted);">(no cap set — doesn't reduce Safe to Spend)</span><br>`
+                            : ''}
+                        Remaining discretionary budget: ₱${Math.max(0, m.activeCycleBudgetCap - m.currentCycleVariableSpent).toLocaleString()}
+                    </div>
+                </div>
+                <div style="margin-top: 10px; font-size: 0.9rem; color: var(--text-main);">${planText}</div>
             `;
             
             monthlyMsgBox.innerHTML = monthlyHTML;
