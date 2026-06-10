@@ -173,244 +173,399 @@
             --accent-purple: #8b5cf6;
         }
 
-        /* ---------------------------------------------------
-           LIGHT MODE — PREMIUM UPGRADE
-        -----------------------------------------------------*/
+        /* =====================================================
+           LIGHT MODE — PREMIUM FINANCIAL TERMINAL
+           
+           Design direction: "Pearl Terminal"
+           Think Bloomberg terminal meets premium fintech.
+           Base: warm off-white (#F7F8FC) — not stark white.
+           Background: faint graph-paper grid, signature move.
+           Cards: tinted with their own data color at 6-8% opacity
+                  so green stat = green-tinted card, etc.
+           Typography: ink-deep navy (#0C1730) — much darker than
+                       standard dark-mode-ported text.
+           Borders: clean 1px with tinted accent, no double borders.
+           Shadows: colored, not grey — each shadow picks up accent.
+        ===================================================== */
+
         body.light-mode {
-            --bg-deep: #eef2f7;
-            --bg-mid: #ffffff;
-            --glass: rgba(255, 255, 255, 0.92);
-            --glass-solid: #ffffff;
-            --glass-hover: rgba(248, 250, 252, 0.98);
-            --glass-border: rgba(99, 120, 160, 0.12);
-            --glass-border-bright: rgba(56, 139, 248, 0.22);
-            --glass-shadow: 0 4px 24px -4px rgba(30, 64, 120, 0.10), 0 1px 4px rgba(30,64,120,0.06);
-            --text-main: #0f172a;
-            --text-muted: #475569;
-            --text-soft: #334155;
-            --success-glow: rgba(16, 185, 129, 0.10);
-            --danger-glow: rgba(244, 63, 94, 0.10);
-            --gold-glow: rgba(251, 191, 36, 0.10);
+            --bg-deep: #F0F3FA;
+            --bg-mid: #FFFFFF;
+            --glass: rgba(255, 255, 255, 0.96);
+            --glass-solid: #FFFFFF;
+            --glass-hover: #FFFFFF;
+            --glass-border: rgba(15, 30, 80, 0.09);
+            --glass-border-bright: rgba(15, 30, 80, 0.18);
+            --glass-shadow: 0 1px 3px rgba(15,30,80,0.06), 0 4px 16px rgba(15,30,80,0.07);
+            --text-main: #0C1730;
+            --text-muted: #4A5878;
+            --text-soft: #2E3A52;
+            --success: #059669;
+            --success-glow: rgba(5, 150, 105, 0.10);
+            --danger: #DC2626;
+            --danger-glow: rgba(220, 38, 38, 0.10);
+            --gold: #D97706;
+            --gold-glow: rgba(217, 119, 6, 0.10);
+            --accent-purple: #7C3AED;
         }
 
-        /* Light mode background — subtle blue-white gradient */
+        /* Signature: faint graph-paper grid — unmistakably financial */
         body.light-mode {
-            background: #eef2f7;
+            background-color: #F0F3FA;
             background-image:
-                radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.08) 0%, transparent 50%),
-                radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.06) 0%, transparent 50%);
+                linear-gradient(rgba(56, 110, 220, 0.045) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(56, 110, 220, 0.045) 1px, transparent 1px),
+                radial-gradient(ellipse at 15% 10%, rgba(56, 189, 248, 0.12) 0%, transparent 55%),
+                radial-gradient(ellipse at 88% 85%, rgba(139, 92, 246, 0.08) 0%, transparent 55%);
+            background-size: 32px 32px, 32px 32px, 100% 100%, 100% 100%;
+            background-attachment: fixed;
         }
 
-        body.light-mode input, body.light-mode select {
-            background: #f8fafc;
+        /* ---- INPUTS & SELECTS ---- */
+        body.light-mode input,
+        body.light-mode select {
+            background: #FFFFFF;
             color: var(--text-main);
-            border: 1.5px solid #d1dae8;
+            border: 1.5px solid #C9D3E8;
             font-weight: 600;
+            box-shadow: inset 0 1px 2px rgba(15,30,80,0.04);
         }
-        body.light-mode input:focus, body.light-mode select:focus {
-            background: #ffffff;
+        body.light-mode input:focus,
+        body.light-mode select:focus {
+            background: #FFFFFF;
             border-color: var(--accent-blue);
-            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.18), inset 0 1px 2px rgba(15,30,80,0.02);
         }
-        body.light-mode input::placeholder { color: #94a3b8; }
+        body.light-mode input::placeholder { color: #8FA0BE; font-weight: 400; }
+        body.light-mode select {
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%234A5878%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+        }
+        body.light-mode select option { background: #FFFFFF; color: var(--text-main); }
 
+        /* ---- TOP CONTROLS: nav, toggles, theme switcher ---- */
         body.light-mode .time-nav,
         body.light-mode .view-toggle-container,
         body.light-mode .theme-switcher,
         body.light-mode #lightModeToggleBtn {
-            background: #ffffff;
-            border: 1.5px solid #d1dae8;
-            box-shadow: 0 1px 4px rgba(30,64,120,0.06);
+            background: #FFFFFF;
+            border: 1.5px solid #C9D3E8;
+            box-shadow: 0 1px 4px rgba(15,30,80,0.07);
             color: var(--text-main);
         }
-        body.light-mode .time-nav:hover { border-color: var(--accent-blue); }
+        body.light-mode .time-nav:hover,
+        body.light-mode #lightModeToggleBtn:hover {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.12);
+        }
 
-        body.light-mode .btn-initialize { color: #ffffff; }
-
+        /* ---- CARDS ---- */
         body.light-mode .card {
-            background: #ffffff;
-            border: 1.5px solid #e2e9f3;
-            box-shadow: 0 2px 16px -4px rgba(30, 64, 120, 0.08), 0 1px 3px rgba(30,64,120,0.04);
+            background: #FFFFFF;
+            border: 1.5px solid rgba(15,30,80,0.09);
+            box-shadow: 0 1px 3px rgba(15,30,80,0.05), 0 6px 20px rgba(15,30,80,0.06);
         }
         body.light-mode .card:hover {
-            border-color: rgba(56, 189, 248, 0.4);
-            box-shadow: 0 8px 32px -8px rgba(30, 64, 120, 0.14);
+            border-color: var(--accent-blue);
+            box-shadow: 0 2px 4px rgba(15,30,80,0.05), 0 12px 32px rgba(56,189,248,0.12);
+            transform: translateY(-3px);
         }
 
+        /* ---- STAT BOXES — tinted by data color, premium look ---- */
         body.light-mode .stat-box {
-            background: linear-gradient(145deg, #ffffff 0%, #f8fbff 100%);
-            border: 1.5px solid #e2e9f3;
-            box-shadow: 0 2px 12px -4px rgba(30, 64, 120, 0.08);
+            background: #FFFFFF;
+            border: 1.5px solid rgba(15,30,80,0.09);
+            box-shadow: 0 1px 3px rgba(15,30,80,0.05), 0 4px 14px rgba(15,30,80,0.06);
+        }
+        body.light-mode .stat-box.green {
+            background: linear-gradient(145deg, #F0FDF8 0%, #FFFFFF 60%);
+            border-color: rgba(5, 150, 105, 0.22);
+            box-shadow: 0 1px 3px rgba(5,150,105,0.06), 0 4px 14px rgba(5,150,105,0.10);
+        }
+        body.light-mode .stat-box.red {
+            background: linear-gradient(145deg, #FFF1F1 0%, #FFFFFF 60%);
+            border-color: rgba(220, 38, 38, 0.18);
+            box-shadow: 0 1px 3px rgba(220,38,38,0.05), 0 4px 14px rgba(220,38,38,0.09);
+        }
+        body.light-mode .stat-box.purple {
+            background: linear-gradient(145deg, #F5F0FF 0%, #FFFFFF 60%);
+            border-color: rgba(124, 58, 237, 0.18);
+            box-shadow: 0 1px 3px rgba(124,58,237,0.05), 0 4px 14px rgba(124,58,237,0.09);
+        }
+        body.light-mode .stat-box.gold {
+            background: linear-gradient(145deg, #FFFBEB 0%, #FFFFFF 60%);
+            border-color: rgba(217, 119, 6, 0.20);
+            box-shadow: 0 1px 3px rgba(217,119,6,0.05), 0 4px 14px rgba(217,119,6,0.10);
+        }
+        body.light-mode .stat-box.gray {
+            background: linear-gradient(145deg, #F4F6FB 0%, #FFFFFF 60%);
+            border-color: rgba(15,30,80,0.12);
         }
         body.light-mode .stat-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 28px rgba(15,30,80,0.13);
+        }
+        body.light-mode .stat-label { color: var(--text-muted); }
+
+        /* ---- TABS ---- */
+        body.light-mode .tabs { border-bottom: 2px solid #E2E8F5; }
+        body.light-mode .tab-btn { color: var(--text-muted); font-weight: 600; }
+        body.light-mode .tab-btn:hover {
+            background: rgba(56, 189, 248, 0.08);
+            color: var(--text-main);
+        }
+        body.light-mode .tab-btn.active {
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.14) 0%, rgba(45, 212, 191, 0.10) 100%);
             border-color: var(--accent-blue);
-            box-shadow: 0 8px 24px -6px rgba(56, 189, 248, 0.18);
+            color: #0C54A0;
+            font-weight: 700;
+            box-shadow: 0 2px 10px rgba(56, 189, 248, 0.15);
         }
 
+        /* ---- ITEMS (transaction rows, goal rows, etc.) ---- */
         body.light-mode .item {
-            background: linear-gradient(145deg, #ffffff 0%, #f8fbff 100%);
-            border: 1.5px solid #e2e9f3;
+            background: #FAFBFF;
+            border: 1.5px solid rgba(15,30,80,0.08);
             border-left-width: 4px;
+            box-shadow: 0 1px 4px rgba(15,30,80,0.04);
         }
         body.light-mode .item:hover {
-            border-color: rgba(56, 189, 248, 0.35);
-            background: #ffffff;
-            box-shadow: 0 4px 16px -4px rgba(30, 64, 120, 0.10);
-        }
-
-        body.light-mode .tab-btn { color: var(--text-muted); }
-        body.light-mode .tab-btn:hover { background: rgba(56, 189, 248, 0.07); color: var(--text-main); }
-        body.light-mode .tab-btn.active {
-            background: linear-gradient(135deg, rgba(56, 189, 248, 0.12), rgba(45, 212, 191, 0.10));
+            background: #FFFFFF;
             border-color: var(--accent-blue);
-            color: #0369a1;
-            box-shadow: 0 2px 12px rgba(56, 189, 248, 0.12);
+            box-shadow: 4px 4px 20px rgba(56,189,248,0.12);
+            transform: translateX(4px);
+        }
+        body.light-mode .item-name { color: var(--text-main); font-weight: 700; }
+        body.light-mode .item-detail { color: var(--text-muted); }
+
+        /* ---- CHART CONTAINER ---- */
+        body.light-mode .chart-container {
+            background: linear-gradient(180deg, #F7F9FF 0%, #FAFBFF 100%);
+            border: 1.5px solid rgba(15,30,80,0.08);
         }
 
-        body.light-mode .tabs {
-            border-bottom-color: #e2e9f3;
-        }
-
+        /* ---- DELTA TABLE (YTD matrix) ---- */
         body.light-mode .delta-table {
-            background: #ffffff;
-            border: 1.5px solid #e2e9f3;
+            background: #FFFFFF;
+            border: 1.5px solid rgba(15,30,80,0.09);
+            box-shadow: 0 2px 12px rgba(15,30,80,0.05);
         }
         body.light-mode .delta-table th {
             color: var(--text-muted);
-            background: #f8fbff;
-            border-bottom: 1.5px solid #e2e9f3;
+            background: #F4F7FF;
+            border-bottom: 2px solid #E2E8F5;
+            font-size: 0.72rem;
+            letter-spacing: 0.8px;
         }
-        body.light-mode .delta-table td { border-bottom: 1px solid #f0f4fa; }
-        body.light-mode .delta-table tr:hover td { background: #f8fbff; }
-
-        body.light-mode .chart-container {
-            background: #f8fbff;
-            border: 1.5px solid #e2e9f3;
+        body.light-mode .delta-table td {
+            border-bottom: 1px solid #EEF2FA;
+            color: var(--text-main);
+        }
+        body.light-mode .delta-table tr:hover td { background: #F4F7FF; }
+        body.light-mode .delta-badge.delta-flat {
+            background: rgba(15,30,80,0.07);
+            color: var(--text-muted);
+        }
+        body.light-mode .delta-badge.delta-down {
+            background: rgba(5, 150, 105, 0.12);
+            color: #047857;
+        }
+        body.light-mode .delta-badge.delta-up {
+            background: rgba(220, 38, 38, 0.10);
+            color: #B91C1C;
         }
 
-        body.light-mode .header h1 { color: var(--text-main); }
-        body.light-mode .card h3 { color: var(--text-main); }
-
+        /* ---- MOTIVATIONAL BANNERS ---- */
         body.light-mode .motivational-banner {
-            background: rgba(16, 185, 129, 0.08);
-            border-color: rgba(16, 185, 129, 0.25);
+            background: linear-gradient(135deg, rgba(5,150,105,0.08) 0%, rgba(5,150,105,0.04) 100%);
+            border: 1.5px solid rgba(5, 150, 105, 0.25);
+            color: #047857;
         }
-        body.light-mode .motivational-banner b { color: var(--text-main); }
+        body.light-mode .motivational-banner b { color: #065F46; }
         body.light-mode .motivational-banner.warning {
-            background: rgba(244, 63, 94, 0.07);
-            border-color: rgba(244, 63, 94, 0.2);
+            background: linear-gradient(135deg, rgba(220,38,38,0.07) 0%, rgba(220,38,38,0.03) 100%);
+            border-color: rgba(220, 38, 38, 0.22);
+            color: #B91C1C;
         }
         body.light-mode .motivational-banner.neutral {
-            background: #f8fbff;
-            border-color: #e2e9f3;
-        }
-
-        body.light-mode .alert-banner-box {
-            background: rgba(16, 185, 129, 0.07);
-            border-color: rgba(16, 185, 129, 0.2);
-        }
-        body.light-mode .alert-banner-box.warning {
-            background: rgba(244, 63, 94, 0.07);
-            border-color: rgba(244, 63, 94, 0.2);
-        }
-
-        body.light-mode .empty-message {
-            background: #f8fbff;
-            border-color: #d1dae8;
+            background: #F4F7FF;
+            border-color: #E2E8F5;
             color: var(--text-muted);
         }
 
-        body.light-mode .counter-widget {
-            background: rgba(56, 189, 248, 0.08);
-            border-color: rgba(56, 189, 248, 0.2);
-            color: #0369a1;
+        /* ---- ALERT BANNERS ---- */
+        body.light-mode .alert-banner-box {
+            background: linear-gradient(135deg, rgba(5,150,105,0.08) 0%, rgba(5,150,105,0.03) 100%);
+            border: 1.5px solid rgba(5, 150, 105, 0.22);
+            color: #047857;
+        }
+        body.light-mode .alert-banner-box.warning {
+            background: linear-gradient(135deg, rgba(220,38,38,0.08) 0%, rgba(220,38,38,0.03) 100%);
+            border-color: rgba(220, 38, 38, 0.22);
+            color: #B91C1C;
         }
 
+        /* ---- EMPTY STATE ---- */
+        body.light-mode .empty-message {
+            background: #F4F7FF;
+            border: 1.5px dashed #C9D3E8;
+            color: var(--text-muted);
+        }
+
+        /* ---- COUNTER WIDGET ---- */
+        body.light-mode .counter-widget {
+            background: linear-gradient(135deg, rgba(56,189,248,0.10) 0%, rgba(45,212,191,0.07) 100%);
+            border: 1.5px solid rgba(56,189,248,0.28);
+            color: #0C54A0;
+            font-weight: 700;
+        }
+
+        /* ---- HELP ICON ---- */
         body.light-mode .help-icon {
-            background: #f8fbff;
-            border-color: #d1dae8;
+            background: #F0F3FA;
+            border: 1.5px solid #C9D3E8;
             color: var(--text-muted);
         }
         body.light-mode .help-icon:hover {
             background: var(--accent-blue);
-            color: #fff;
+            color: #FFFFFF;
             border-color: var(--accent-blue);
+            box-shadow: 0 4px 12px rgba(56,189,248,0.3);
         }
 
-        /* FIN panel in light mode */
-        body.light-mode .bot-panel-wrapper {
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(255,255,255,0.97) 100%);
-            border-color: rgba(139, 92, 246, 0.2);
-            box-shadow: 0 4px 24px rgba(139, 92, 246, 0.07);
-        }
-        body.light-mode .bot-advisor-header {
-            border-bottom-color: rgba(139, 92, 246, 0.12);
-            background: rgba(139, 92, 246, 0.04);
-        }
-        body.light-mode .bot-insight-box {
-            background: #f8fbff;
-            border-color: #e2e9f3;
-        }
-        body.light-mode .bot-insight-box:hover {
-            background: #ffffff;
-            border-color: rgba(56, 189, 248, 0.3);
-        }
-        body.light-mode .bot-advisor-name,
-        body.light-mode .bot-report-title { color: var(--text-main); }
+        /* ---- PROGRESS BARS ---- */
+        body.light-mode .progress-bar-track { background: #E2E8F5; }
 
-        /* Modal in light mode */
-        body.light-mode .modal-box {
-            background: #ffffff;
-            border-color: #e2e9f3;
+        /* ---- TOGGLE SWITCHES ---- */
+        body.light-mode .toggle-slider {
+            background: #C9D3E8;
+            border-color: #B8C4DC;
         }
-        body.light-mode .modal-title { color: var(--text-main); }
-        body.light-mode .modal-close {
-            background: #f8fbff;
-            border-color: #d1dae8;
-            color: var(--text-muted);
+        body.light-mode .toggle-slider:before { background: #FFFFFF; box-shadow: 0 1px 3px rgba(15,30,80,0.2); }
+        body.light-mode input:checked + .toggle-slider {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-teal));
+            border-color: transparent;
         }
+        body.light-mode input:checked + .toggle-slider:before { background: #FFFFFF; }
 
-        /* User badge in light mode */
-        body.light-mode .user-count-badge {
-            background: rgba(255,255,255,0.95);
-            border-color: #d1dae8;
-            box-shadow: 0 2px 12px rgba(30,64,120,0.10);
-            color: var(--text-main);
+        /* ---- BUTTONS ---- */
+        body.light-mode .btn-initialize { color: #FFFFFF; }
+        body.light-mode .btn-danger {
+            background: rgba(220, 38, 38, 0.07);
+            color: #DC2626;
+            border: 1.5px solid rgba(220, 38, 38, 0.2);
         }
-
-        /* Progress bar track in light mode */
-        body.light-mode .progress-bar-track { background: #e8eef7; }
-
-        /* Toggle slider in light mode */
-        body.light-mode .toggle-slider { background: #d1dae8; border-color: #bbc8dc; }
-        body.light-mode .toggle-slider:before { background: #94a3b8; }
-        body.light-mode input:checked + .toggle-slider { background: linear-gradient(135deg, var(--accent-blue), var(--accent-teal)); }
-        body.light-mode input:checked + .toggle-slider:before { background: #ffffff; }
-
-        /* Select arrow in light mode */
-        body.light-mode select {
-            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23475569%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+        body.light-mode .btn-danger:hover {
+            background: rgba(220, 38, 38, 0.14);
+            border-color: #DC2626;
         }
-        body.light-mode select option { background: #ffffff; color: var(--text-main); }
-
-        /* Btn mini in light mode */
         body.light-mode .btn-mini {
-            background: rgba(56, 189, 248, 0.08);
-            border-color: rgba(56, 189, 248, 0.25);
-            color: #0369a1;
+            background: linear-gradient(135deg, rgba(56,189,248,0.09) 0%, rgba(45,212,191,0.06) 100%);
+            border: 1.5px solid rgba(56,189,248,0.30);
+            color: #0C54A0;
+            font-weight: 700;
         }
         body.light-mode .btn-mini:hover {
-            background: rgba(56, 189, 248, 0.15);
+            background: linear-gradient(135deg, rgba(56,189,248,0.18) 0%, rgba(45,212,191,0.12) 100%);
             border-color: var(--accent-blue);
+            box-shadow: 0 3px 10px rgba(56,189,248,0.18);
         }
 
-        /* Welcome panel in light mode */
-        body.light-mode #welcome-overlay { background: rgba(238, 242, 247, 0.92); }
-        body.light-mode .welcome-panel {
-            background: #ffffff;
-            border-color: #e2e9f3;
-            box-shadow: 0 20px 60px rgba(30, 64, 120, 0.15);
+        /* ---- FIN AI PANEL ---- */
+        body.light-mode .bot-panel-wrapper {
+            background: linear-gradient(135deg, #F5F0FF 0%, #FAFBFF 60%, #FFFFFF 100%);
+            border: 1.5px solid rgba(124, 58, 237, 0.22);
+            box-shadow: 0 4px 24px rgba(124,58,237,0.10), 0 1px 4px rgba(15,30,80,0.06);
         }
+        body.light-mode .bot-advisor-header {
+            border-bottom: 1.5px solid rgba(124, 58, 237, 0.14);
+            background: rgba(124, 58, 237, 0.05);
+        }
+        body.light-mode .bot-advisor-name { color: var(--text-main); font-weight: 800; }
+        body.light-mode .bot-report-title { color: var(--text-main); }
+        body.light-mode .bot-insight-box {
+            background: #FAFBFF;
+            border: 1.5px solid rgba(15,30,80,0.09);
+            box-shadow: 0 1px 4px rgba(15,30,80,0.04);
+        }
+        body.light-mode .bot-insight-box:hover {
+            background: #FFFFFF;
+            border-color: var(--accent-blue);
+            box-shadow: 0 4px 14px rgba(56,189,248,0.12);
+        }
+        /* Ensure FIN text colors remain readable in light mode */
+        body.light-mode .bot-insight-box * { color: inherit; }
+        body.light-mode #botDailyText,
+        body.light-mode #botMonthlyText { color: var(--text-main); }
+
+        /* ---- MODAL ---- */
+        body.light-mode .modal-overlay { background: rgba(12, 23, 48, 0.55); backdrop-filter: blur(10px); }
+        body.light-mode .modal-box {
+            background: #FFFFFF;
+            border: 1.5px solid rgba(15,30,80,0.12);
+            box-shadow: 0 24px 60px rgba(15,30,80,0.18);
+        }
+        body.light-mode .modal-title {
+            color: var(--text-main);
+            border-bottom-color: #E2E8F5;
+        }
+        body.light-mode .modal-text { color: var(--text-soft); }
+        body.light-mode .modal-close {
+            background: #F0F3FA;
+            border: 1.5px solid #C9D3E8;
+            color: var(--text-muted);
+        }
+        body.light-mode .modal-close:hover {
+            background: #DC2626;
+            border-color: #DC2626;
+            color: #FFFFFF;
+        }
+
+        /* ---- USER COUNT BADGE ---- */
+        body.light-mode .user-count-badge {
+            background: rgba(255,255,255,0.97);
+            border: 1.5px solid #C9D3E8;
+            box-shadow: 0 4px 16px rgba(15,30,80,0.10);
+            color: var(--text-main);
+        }
+        body.light-mode .user-count-badge:hover {
+            background: #FFFFFF;
+            border-color: var(--accent-blue);
+            box-shadow: 0 6px 20px rgba(56,189,248,0.15);
+        }
+
+        /* ---- WELCOME SCREEN ---- */
+        body.light-mode #welcome-overlay {
+            background: rgba(240, 243, 250, 0.93);
+            backdrop-filter: blur(18px);
+        }
+        body.light-mode .welcome-panel {
+            background: #FFFFFF;
+            border: 1.5px solid rgba(15,30,80,0.12);
+            box-shadow: 0 24px 60px rgba(15,30,80,0.14), inset 0 1px 0 rgba(255,255,255,1);
+        }
+        body.light-mode .welcome-tagline { color: var(--text-muted); }
+
+        /* ---- HEADER & TITLE CARD ---- */
+        body.light-mode .card:first-of-type {
+            background: linear-gradient(135deg, #FFFFFF 0%, #F7F9FF 100%);
+            border-color: rgba(15,30,80,0.10);
+        }
+        body.light-mode .header p { color: var(--text-muted); }
+
+        /* ---- FOOTER ---- */
+        body.light-mode .footer-signature {
+            border-top-color: #E2E8F5;
+            color: #8FA0BE;
+        }
+
+        /* ---- FAB BUTTON ---- */
+        body.light-mode .fab-quick-add {
+            box-shadow: 0 8px 24px rgba(56,189,248,0.35);
+        }
+
+        /* ---- SCROLLBAR ---- */
+        body.light-mode ::-webkit-scrollbar-thumb { background: #C9D3E8; }
+        body.light-mode ::-webkit-scrollbar-thumb:hover { background: var(--accent-blue); }
         /* --------------------------------------------------- */
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
