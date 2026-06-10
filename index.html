@@ -758,7 +758,7 @@
             background: var(--success-glow); border: 1px solid rgba(16, 185, 129, 0.2);
             color: var(--success); font-weight: 500; font-size: 0.9rem; margin-top: 10px;
         }
-        .motivational-banner b { font-weight: 700; color: #fff; }
+        .motivational-banner b { font-weight: 700; color: var(--text-main); }
         .motivational-banner.warning { background: var(--danger-glow); border-color: rgba(244, 63, 94, 0.2); color: var(--danger); }
         .motivational-banner.neutral { background: rgba(255,255,255,0.05); border-color: var(--glass-border); color: var(--text-soft); }
 
@@ -1067,7 +1067,7 @@
                     </div>
                     <div class="stat-box">
                         <div class="stat-label">Net Cash Flow</div>
-                        <div class="stat-value" style="color: #fff;" id="dashBalance">₱0</div>
+                        <div class="stat-value" style="color: var(--text-main);" id="dashBalance">₱0</div>
                     </div>
                     <div class="stat-box purple">
                         <div class="stat-label">Savings Rate</div>
@@ -1075,7 +1075,7 @@
                     </div>
                     <div class="stat-box gold">
                         <div class="stat-label">Safe to Spend</div>
-                        <div class="stat-value" style="color: #f59e0b;" id="dashBurnRate">₱0</div>
+                        <div class="stat-value" style="color: var(--gold);" id="dashBurnRate">₱0</div>
                     </div>
                     <div class="stat-box gray">
                         <div class="stat-label">Planned Fixed / Mo</div>
@@ -2193,7 +2193,7 @@
                 burnRateEl.style.color = "var(--danger)";
             } else {
                 burnRateEl.textContent = "₱" + Math.round(safeToSpend).toLocaleString();
-                burnRateEl.style.color = "#f59e0b";
+                burnRateEl.style.color = "var(--gold)";
             }
         }
 
@@ -2324,7 +2324,7 @@
             }
 
             // 1. Top Insight Box (Safe to Spend & Risks)
-            let dailyHTML = `<div style="font-size: 0.75rem; font-weight: 800; color: #f59e0b; text-transform: uppercase; margin-bottom: 8px;">Safe to Spend & Risks</div>`;
+            let dailyHTML = `<div style="font-size: 0.75rem; font-weight: 800; color: var(--gold); text-transform: uppercase; margin-bottom: 8px;">Safe to Spend & Risks</div>`;
             
             if (safeToSpend <= 0) {
                 dailyHTML += `<div style="font-size: 0.95rem; line-height: 1.5; color: var(--text-main);">🛑 <strong>Safe to Spend: ₱0</strong> — After deducting ${deductionDetail}, there is no remaining cash to safely spend. Consider reviewing your allocations or boosting your income.</div>`;
