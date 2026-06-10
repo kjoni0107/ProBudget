@@ -1304,8 +1304,12 @@
             }
             // ---------------------------------------------------------------
 
-            // Available Cycle Cash — only budgeted variable spend is deducted here
-            const availableCycleCash = currentCycleIncome + existingCarryoverCash - activeCycleBudgetCap - activeCycleFixedBills;
+            // Available Cycle Cash:
+            // = income + carryover - budget caps (planned ceiling) - fixed bills (planned) - unbudgeted actual spend
+            // Budget caps represent the planned variable spending ceiling for budgeted categories.
+            // Unbudgeted actual spend is ALSO subtracted because that cash is already gone,
+            // even though it doesn't count against any cap's percentage tracking.
+            const availableCycleCash = currentCycleIncome + existingCarryoverCash - activeCycleBudgetCap - activeCycleFixedBills - currentCycleUnbudgetedSpent;
             const safeToSpendPerDay = Math.max(0, availableCycleCash / remainingDaysInCycle);
 
             return {
@@ -2151,18 +2155,26 @@
             if (!dailyMsgBox || !monthlyMsgBox) return;
 
             // --- Safe to Spend Calculation ---
-            // availableCycleCash = income + carryover - budget caps - fixed bills
-            // Unbudgeted expenses do NOT reduce this — they are shown separately
+            // availableCycleCash = income + carryover - budget caps - fixed bills - unbudgeted actual spend
+            // Unbudgeted expenses ARE deducted from the cash pool (money is gone),
+            // but they do NOT count against budget cap pacing percentages.
             const savingsReserve = Math.max(0, m.availableCycleCash * 0.2);
             const safeToSpend = Math.max(0, m.availableCycleCash * 0.8);
+
+            // Build deduction breakdown string for the Safe to Spend description
+            const unbudgetedAmt = m.currentCycleUnbudgetedSpent || 0;
+            let deductionDetail = `budget caps (₱${m.activeCycleBudgetCap.toLocaleString()}), fixed bills (₱${m.activeCycleFixedBills.toLocaleString()})`;
+            if (unbudgetedAmt > 0) {
+                deductionDetail += `, and unbudgeted expenses (₱${Math.round(unbudgetedAmt).toLocaleString()})`;
+            }
 
             // 1. Top Insight Box (Safe to Spend & Risks)
             let dailyHTML = `<div style="font-size: 0.75rem; font-weight: 800; color: #f59e0b; text-transform: uppercase; margin-bottom: 8px;">Safe to Spend & Risks</div>`;
             
             if (safeToSpend <= 0) {
-                dailyHTML += `<div style="font-size: 0.95rem; line-height: 1.5; color: var(--text-main);">🛑 <strong>Safe to Spend: ₱0</strong> — After deducting your budget caps (₱${m.activeCycleBudgetCap.toLocaleString()}) and fixed bills (₱${m.activeCycleFixedBills.toLocaleString()}), there is no remaining cash to safely spend. Consider reviewing your allocations or boosting your income.</div>`;
+                dailyHTML += `<div style="font-size: 0.95rem; line-height: 1.5; color: var(--text-main);">🛑 <strong>Safe to Spend: ₱0</strong> — After deducting ${deductionDetail}, there is no remaining cash to safely spend. Consider reviewing your allocations or boosting your income.</div>`;
             } else {
-                dailyHTML += `<div style="font-size: 0.95rem; line-height: 1.5; color: var(--text-main);">⚡ <strong>Safe to Spend: ₱${Math.round(safeToSpend).toLocaleString()}</strong> — After deducting your budget caps (₱${m.activeCycleBudgetCap.toLocaleString()}) and fixed bills (₱${m.activeCycleFixedBills.toLocaleString()}), this is your uncommitted cash pool.</div>`;
+                dailyHTML += `<div style="font-size: 0.95rem; line-height: 1.5; color: var(--text-main);">⚡ <strong>Safe to Spend: ₱${Math.round(safeToSpend).toLocaleString()}</strong> — After deducting ${deductionDetail}, this is your uncommitted cash pool.</div>`;
                 dailyHTML += `<div style="display:flex; align-items:center; gap:8px; margin-top:10px; padding:10px 14px; border-radius:10px; background:var(--success-glow); border:1px solid rgba(16,185,129,0.2);">
                     <span style="font-size:1.1rem;">💰</span>
                     <div>
@@ -2172,16 +2184,16 @@
                 </div>`;
             }
 
-            // Pacing: ONLY budgeted-category spend counts against your caps
+            // Pacing: ONLY budgeted-category spend counts against your caps percentage
             const cycleUsagePercent = m.activeCycleBudgetCap > 0 ? Math.round((m.currentCycleVariableSpent / m.activeCycleBudgetCap) * 100) : 0;
             let pacingColor = cycleUsagePercent > 100 ? 'var(--danger)' : 'var(--accent-blue)';
             let pacingText = cycleUsagePercent > 100 ? 'You are over spending!' : 'Great pace!';
 
             dailyHTML += `<div style="color: ${pacingColor}; font-size: 0.9rem; font-weight: 500; margin-top: 10px;">📈 <strong>Pacing Info:</strong> You have used ${cycleUsagePercent}% of your budgeted allowance for this half of the month. ${pacingText}</div>`;
 
-            // Unbudgeted spending — informational note, clearly does NOT affect Safe to Spend
-            if ((m.currentCycleUnbudgetedSpent || 0) > 0) {
-                dailyHTML += `<div style="color: var(--text-muted); font-size: 0.85rem; font-weight: 500; margin-top: 8px; padding: 8px 12px; border-radius: 8px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);">ℹ️ <strong>Outside budget caps:</strong> ₱${Math.round(m.currentCycleUnbudgetedSpent).toLocaleString()} spent in categories with no budget limit — this does <em>not</em> reduce Safe to Spend, but keep an eye on it.</div>`;
+            // Unbudgeted spending note — reduces Safe to Spend (cash gone), but not tracked against any cap
+            if (unbudgetedAmt > 0) {
+                dailyHTML += `<div style="color: var(--gold); font-size: 0.85rem; font-weight: 600; margin-top: 8px; padding: 8px 12px; border-radius: 8px; background: rgba(251,191,36,0.07); border: 1px solid rgba(251,191,36,0.18);">⚠️ <strong>Outside budget caps:</strong> ₱${Math.round(unbudgetedAmt).toLocaleString()} spent in categories with no limit set — this <em>has been deducted</em> from your Safe to Spend since the cash is gone, but it doesn't count against any cap's pacing %.</div>`;
             }
             
             dailyMsgBox.innerHTML = dailyHTML;
@@ -2210,9 +2222,9 @@
                 <div style="margin-top: 12px; padding: 10px 14px; border-radius: 10px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);">
                     <div style="font-size: 0.8rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Variable Spending Breakdown</div>
                     <div style="font-size: 0.9rem; line-height: 1.7; color: var(--text-main);">
-                        <span style="font-weight:700;">Budgeted spend:</span> ₱${m.currentCycleVariableSpent.toLocaleString()} <span style="font-size:0.8rem; color:var(--text-muted);">(counts against your caps)</span><br>
+                        <span style="font-weight:700;">Budgeted spend:</span> ₱${m.currentCycleVariableSpent.toLocaleString()} <span style="font-size:0.8rem; color:var(--text-muted);">(tracked against your caps)</span><br>
                         ${(m.currentCycleUnbudgetedSpent || 0) > 0
-                            ? `<span style="font-weight:700; color:var(--gold);">Unbudgeted spend:</span> ₱${Math.round(m.currentCycleUnbudgetedSpent).toLocaleString()} <span style="font-size:0.8rem; color:var(--text-muted);">(no cap set — doesn't reduce Safe to Spend)</span><br>`
+                            ? `<span style="font-weight:700; color:var(--gold);">Unbudgeted spend:</span> ₱${Math.round(m.currentCycleUnbudgetedSpent).toLocaleString()} <span style="font-size:0.8rem; color:var(--text-muted);">(no cap set — deducted from Safe to Spend since cash is spent)</span><br>`
                             : ''}
                         Remaining discretionary budget: ₱${Math.max(0, m.activeCycleBudgetCap - m.currentCycleVariableSpent).toLocaleString()}
                     </div>
